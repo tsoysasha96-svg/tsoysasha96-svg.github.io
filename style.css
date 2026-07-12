@@ -200,3 +200,14 @@ footer.site-footer a {
   text-decoration: none;
   font-size: 0.92rem;
 }
+
+.love-note {
+  position: fixed;
+  right: 12px;
+  bottom: 10px;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 10;
+}
