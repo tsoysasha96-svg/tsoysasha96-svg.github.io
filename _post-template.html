@@ -1,0 +1,56 @@
+<!--
+  Шаблон для новой статьи. НЕ публикуется как страница сама по себе (начинается с _).
+  Порядок добавления новой статьи:
+  1. Скопировать этот файл в posts/<slug>.html
+  2. Заменить {{TITLE}}, {{DESCRIPTION}}, {{DATE}}, {{READ_TIME}} и текст статьи
+  3. Добавить запись в posts.json (в начало массива)
+  4. Обновить sitemap.xml (добавить новый <url>)
+  5. git add, commit, push
+-->
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} — КодБлог</title>
+<meta name="description" content="{{DESCRIPTION}}">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <article class="post">
+    <h1>{{TITLE}}</h1>
+    <div class="post-meta">{{DATE}} · {{READ_TIME}} чтения</div>
+
+    <div class="ad-slot">Рекламный блок</div>
+
+    <!-- Текст статьи: минимум 700-1000 слов, реальная польза для читателя,
+         структура с h2/h3, минимум один список или блок-цитата.
+         Один <div class="ad-slot">Рекламный блок</div> примерно в середине текста. -->
+
+    <a class="back-link" href="/">← Все статьи</a>
+  </article>
+</main>
+
+<div class="ad-slot">Рекламный блок</div>
+
+<footer class="site-footer">
+  <div>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+  </div>
+</footer>
+
+</body>
+</html>

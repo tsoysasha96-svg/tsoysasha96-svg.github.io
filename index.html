@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КодБлог — заметки о программировании и технологиях</title>
+<meta name="description" content="Практические статьи о программировании, инструментах разработчика и технологиях для тех, кто пишет код каждый день.">
+<link rel="stylesheet" href="style.css">
+<!-- AdSense: вставить тег верификации сюда после регистрации, см. README.md -->
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Заметки о программировании и технологиях</h1>
+    <p>Практические статьи для разработчиков: инструменты, языки, подходы к работе — без воды.</p>
+  </section>
+
+  <div class="ad-slot" id="ad-top">Рекламный блок (появится после подключения AdSense)</div>
+
+  <section class="post-list" id="post-list">
+    <p style="color:var(--text-dim)">Загрузка статей…</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+  </div>
+  <div style="margin-top:8px">© <span id="year"></span> КодБлог</div>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+fetch('posts.json')
+  .then(r => r.json())
+  .then(posts => {
+    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const list = document.getElementById('post-list');
+    list.innerHTML = posts.map(p => `
+      <a class="post-card" href="posts/${p.slug}.html">
+        <h2>${p.title}</h2>
+        <div class="post-meta">${formatDate(p.date)} · ${p.readTime} чтения</div>
+        <p class="post-excerpt">${p.excerpt}</p>
+      </a>
+    `).join('');
+  })
+  .catch(() => {
+    document.getElementById('post-list').innerHTML = '<p>Не удалось загрузить статьи.</p>';
+  });
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+</script>
+
+</body>
+</html>
