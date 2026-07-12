@@ -2,8 +2,8 @@
   Шаблон для новой статьи. НЕ публикуется как страница сама по себе (начинается с _).
   Порядок добавления новой статьи:
   1. Скопировать этот файл в posts/<slug>.html
-  2. Заменить {{TITLE}}, {{DESCRIPTION}}, {{DATE}}, {{READ_TIME}} и текст статьи
-  3. Добавить запись в posts.json (в начало массива)
+  2. Заменить {{TITLE}}, {{DESCRIPTION}}, {{DATE}}, {{READ_TIME}}, {{CATEGORY}}, {{SLUG}} и текст статьи
+  3. Добавить запись в posts.json (в начало массива, включая поле "category")
   4. Обновить sitemap.xml (добавить новый <url>)
   5. git add, commit, push
 -->
@@ -15,6 +15,7 @@
 <title>{{TITLE}} — КодБлог</title>
 <meta name="description" content="{{DESCRIPTION}}">
 <link rel="stylesheet" href="../style.css">
+<script src="../covers.js" defer></script>
 </head>
 <body>
 
@@ -30,6 +31,8 @@
 
 <main>
   <article class="post">
+    <div class="cover cover--hero" data-slug="{{SLUG}}"></div>
+    <span class="badge">{{CATEGORY}}</span>
     <h1>{{TITLE}}</h1>
     <div class="post-meta">{{DATE}} · {{READ_TIME}} чтения</div>
 
