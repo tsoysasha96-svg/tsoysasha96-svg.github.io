@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>КодБлог — заметки о программировании и технологиях</title>
 <meta name="description" content="Практические статьи о программировании, инструментах разработчика и технологиях для тех, кто пишет код каждый день.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="style.css">
 <script src="covers.js" defer></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
@@ -52,8 +53,8 @@ fetch('posts.json')
     const list = document.getElementById('post-list');
     list.innerHTML = posts.map(p => `
       <a class="post-card" href="posts/${p.slug}.html">
-        <div class="cover cover--card" data-slug="${p.slug}"></div>
-        <span class="badge">${p.category || 'Статья'}</span>
+        <div class="cover cover--card" data-slug="${p.slug}" data-category="${p.category || ''}"></div>
+        <span class="badge" data-category="${p.category || ''}">${p.category || 'Статья'}</span>
         <h2>${p.title}</h2>
         <div class="post-meta">${formatDate(p.date)} · ${p.readTime} чтения</div>
         <p class="post-excerpt">${p.excerpt}</p>
