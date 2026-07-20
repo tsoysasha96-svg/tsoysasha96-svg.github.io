@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>КодБлог</title>
+  <link>https://tsoysasha96-svg.github.io/</link>
+  <atom:link href="https://tsoysasha96-svg.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
+  <language>ru</language>
+  <item>
+    <title>CORS простыми словами: почему запрос работает в Postman, но падает в браузере</title>
+    <link>https://tsoysasha96-svg.github.io/posts/chto-takoe-cors-i-kak-on-rabotaet.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/chto-takoe-cors-i-kak-on-rabotaet.html</guid>
+    <pubDate>Mon, 20 Jul 2026 10:00:00 +0000</pubDate>
+    <category>Веб-разработка</category>
+    <description>Разбираемся, откуда берётся Same-Origin Policy, чем simple request отличается от preflight-запроса и почему звёздочка в Access-Control-Allow-Origin не всегда решает проблему.</description>
+  </item>
+  <item>
+    <title>Индексы в базах данных: как они ускоряют запросы и когда могут навредить</title>
+    <link>https://tsoysasha96-svg.github.io/posts/indeksy-v-bazah-dannyh-kak-oni-rabotayut.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/indeksy-v-bazah-dannyh-kak-oni-rabotayut.html</guid>
+    <pubDate>Wed, 15 Jul 2026 10:00:00 +0000</pubDate>
+    <category>Базы данных</category>
+    <description>Индекс — не волшебная кнопка «сделать быстрее». Разбираемся, как индексы устроены на практике, почему они не бесплатны и в каких случаях запрос всё равно останется медленным.</description>
+  </item>
+  <item>
+    <title>Технический долг: что это такое и как с ним работать, не разрушая продукт</title>
+    <link>https://tsoysasha96-svg.github.io/posts/tehnicheskiy-dolg-kak-s-nim-rabotat.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/tehnicheskiy-dolg-kak-s-nim-rabotat.html</guid>
+    <pubDate>Mon, 13 Jul 2026 10:00:00 +0000</pubDate>
+    <category>Основы и концепции</category>
+    <description>Технический долг — не ругательство и не признак плохих разработчиков. Разбираемся, откуда он берётся, как отличить его от обычного плохого кода и как встроить работу с ним в обычный процесс разработки.</description>
+  </item>
+  <item>
+    <title>Как выбрать первый язык программирования в 2026 году</title>
+    <link>https://tsoysasha96-svg.github.io/posts/vybor-pervogo-yazyka-2026.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/vybor-pervogo-yazyka-2026.html</guid>
+    <pubDate>Sun, 12 Jul 2026 10:00:00 +0000</pubDate>
+    <category>Языки программирования</category>
+    <description>Разбираем по шагам, на что реально стоит смотреть новичку: рынок труда, порог входа, экосистему — и почему «самый лучший язык» это неправильный вопрос.</description>
+  </item>
+  <item>
+    <title>12 бесплатных инструментов, которые экономят разработчику часы каждую неделю</title>
+    <link>https://tsoysasha96-svg.github.io/posts/besplatnye-instrumenty-razrabotchika-2026.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/besplatnye-instrumenty-razrabotchika-2026.html</guid>
+    <pubDate>Sun, 12 Jul 2026 10:00:00 +0000</pubDate>
+    <category>Инструменты</category>
+    <description>От терминальных утилит до сервисов CI/CD — подборка проверенных бесплатных инструментов, которые реально ускоряют работу, а не просто выглядят красиво в твиттере.</description>
+  </item>
+  <item>
+    <title>Что такое AI-агенты и чем они отличаются от обычных чат-ботов</title>
+    <link>https://tsoysasha96-svg.github.io/posts/chto-takoe-ai-agenty.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/chto-takoe-ai-agenty.html</guid>
+    <pubDate>Sun, 12 Jul 2026 10:00:00 +0000</pubDate>
+    <category>AI и агенты</category>
+    <description>Простыми словами о том, как устроены современные AI-агенты, зачем им нужны инструменты и память, и где они уже реально меняют разработку ПО.</description>
+  </item>
+</channel>
+</rss>
