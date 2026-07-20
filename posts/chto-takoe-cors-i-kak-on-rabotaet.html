@@ -8,7 +8,36 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="../style.css">
 <script src="../covers.js" defer></script>
+<script src="../related-posts.js" defer></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CORS простыми словами: почему запрос работает в Postman, но падает в браузере",
+  "description": "Разбираемся, что такое CORS на самом деле, чем simple request отличается от preflight-запроса, почему credentials ломают привычные настройки и как чинить CORS правильно, а не через wildcard.",
+  "datePublished": "2026-07-20",
+  "dateModified": "2026-07-20",
+  "inLanguage": "ru",
+  "articleSection": "Веб-разработка",
+  "author": {
+    "@type": "Organization",
+    "name": "КодБлог"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "КодБлог",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tsoysasha96-svg.github.io/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tsoysasha96-svg.github.io/posts/chto-takoe-cors-i-kak-on-rabotaet.html"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -29,8 +58,6 @@
     <h1>CORS простыми словами: почему запрос работает в Postman, но падает в браузере</h1>
     <div class="post-meta">20 июля 2026 · 9 мин чтения</div>
 
-    <div class="ad-slot">Рекламный блок</div>
-
     <p>Классическая ситуация: фронтенд стучится на API, в Postman или curl всё отвечает как надо, а в браузере в консоли появляется красная строка про CORS — и запрос просто не выполняется. Разработчик, который впервые с этим сталкивается, обычно решает проблему методом копипасты первого найденного заголовка, который «вроде помогает». Работает — и ладно. Но CORS устроен вполне логично, и если понять, из-за чего он вообще существует, отладка таких ошибок перестаёт быть гаданием.</p>
 
     <h2>Same-Origin Policy: откуда растёт ограничение</h2>
@@ -45,8 +72,6 @@
       <li><strong>Preflight-запрос.</strong> Если запрос не подпадает под «простой» — типичный пример: <code>Content-Type: application/json</code>, кастомные заголовки вроде <code>Authorization</code>, методы PUT/DELETE/PATCH — браузер сначала сам отправляет отдельный запрос методом OPTIONS. В нём он спрашивает сервер: «а можно ли вообще так делать этому origin, этим методом, с этими заголовками?». Только если сервер отвечает разрешающими заголовками, браузер отправляет настоящий запрос.</li>
     </ul>
     <p>Это объясняет частое недоумение: «в логах сервера видно два запроса на один клик». Второй запрос — это и есть preflight, он не доходит до вашего обработчика, если тот не настроен отвечать на OPTIONS.</p>
-
-    <div class="ad-slot">Рекламный блок</div>
 
     <h2>Почему <code>Access-Control-Allow-Origin: *</code> не всегда решает проблему</h2>
     <p>Заголовок с звёздочкой — самый частый «быстрый фикс», который находят в интернете. Он действительно разрешает читать ответ любому origin, но у него есть важное ограничение: он не работает вместе с запросами, которые несут учётные данные (куки, HTTP-аутентификацию, TLS-сертификаты клиента) — то есть с запросами, где на клиенте включено <code>credentials: 'include'</code>. Спецификация прямо запрещает браузеру принимать wildcard вместе с <code>Access-Control-Allow-Credentials: true</code> — сервер обязан вернуть конкретный origin, а не звёздочку.</p>
@@ -66,11 +91,11 @@
     <h2>Итог</h2>
     <p>CORS — это не досадное препятствие, которое ставится между фронтендом и API, а часть защиты пользователя от чужих скриптов, читающих его данные без разрешения. Ошибка в консоли браузера почти всегда означает одно из двух: сервер не знает про origin, с которого пришёл запрос, либо конфигурация не учитывает нюанс вроде credentials или preflight. Разобравшись один раз в механике simple request и preflight, вы перестанете тратить время на подбор заголовков наугад и начнёте читать ошибку CORS так же спокойно, как обычный 404.</p>
 
+    <div class="related-posts" id="related-posts"></div>
+
     <a class="back-link" href="/">← Все статьи</a>
   </article>
 </main>
-
-<div class="ad-slot">Рекламный блок</div>
 
 <footer class="site-footer">
   <div>
