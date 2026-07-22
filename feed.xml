@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>Глубокая работа программиста: как защитить время на код от бесконечных прерываний</title>
+    <link>https://tsoysasha96-svg.github.io/posts/glubokaya-rabota-programmista-kak-zashchitit-fokus.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/glubokaya-rabota-programmista-kak-zashchitit-fokus.html</guid>
+    <pubDate>Wed, 22 Jul 2026 10:00:00 +0000</pubDate>
+    <category>Продуктивность</category>
+    <description>Почему переключение между задачами стоит разработчику куда дороже, чем кажется, что на самом деле убивает фокус помимо уведомлений, и как выстроить блоки глубокой работы, которые команда будет уважать.</description>
+  </item>
+  <item>
     <title>CORS простыми словами: почему запрос работает в Postman, но падает в браузере</title>
     <link>https://tsoysasha96-svg.github.io/posts/chto-takoe-cors-i-kak-on-rabotaet.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/chto-takoe-cors-i-kak-on-rabotaet.html</guid>
