@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КодБлог Quiz — ежедневный квиз для разработчиков</title>
+<meta name="description" content="Ежедневный квиз для разработчиков: 5 вопросов про JavaScript, Python, Git, алгоритмы, веб и базы данных. Новый квиз каждый день, стрик как в Wordle.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="style.css">
+<script src="enhance.js" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<link rel="alternate" type="application/rss+xml" title="КодБлог" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="КодБлог">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="КодБлог Quiz — ежедневный квиз для разработчиков">
+<meta property="og:description" content="5 вопросов в день про JavaScript, Python, Git, алгоритмы, веб и базы данных. Новый квиз каждый день.">
+<meta property="og:url" content="https://tsoysasha96-svg.github.io/quiz.html">
+<meta property="og:image" content="https://tsoysasha96-svg.github.io/og/default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="КодБлог Quiz — ежедневный квиз для разработчиков">
+<meta name="twitter:description" content="5 вопросов в день про программирование. Новый квиз каждый день.">
+<meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/default.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Как часто обновляется квиз?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Раз в день. Набор из 5 вопросов формируется автоматически по текущей дате — все, кто заходит в один и тот же день, получают одинаковый квиз." }
+    },
+    {
+      "@type": "Question",
+      "name": "Можно ли пройти квиз несколько раз в один день?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Нет, как и в похожих ежедневных играх, за день доступна только одна попытка — результат сохраняется в браузере до следующего дня." }
+    },
+    {
+      "@type": "Question",
+      "name": "Что такое серия (streak)?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Количество дней подряд, когда вы проходили квиз. Если пропустить день, серия обнуляется и начинается заново." }
+    }
+  ]
+}
+</script>
+<style>
+  .qz-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+
+  .qz-streak {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .qz-progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .qz-dot {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--border);
+  }
+
+  .qz-dot.is-current { background: var(--accent); }
+  .qz-dot.is-correct { background: #22c55e; }
+  .qz-dot.is-wrong { background: #ef4444; }
+
+  .qz-card {
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  .qz-category {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .qz-question { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; }
+
+  .qz-options { display: grid; gap: 10px; }
+
+  .qz-option {
+    text-align: left;
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .qz-option:not(:disabled):hover { border-color: var(--accent); }
+  .qz-option:disabled { cursor: default; }
+
+  .qz-option.is-correct { border-color: #22c55e; background: rgba(34, 197, 94, 0.14); }
+  .qz-option.is-wrong { border-color: #ef4444; background: rgba(239, 68, 68, 0.12); }
+
+  .qz-explanation {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    display: none;
+  }
+
+  .qz-explanation.is-visible { display: block; }
+
+  .qz-next {
+    margin-top: 18px;
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    display: none;
+  }
+
+  .qz-next.is-visible { display: inline-block; }
+  .qz-next:hover { opacity: 0.9; }
+
+  .qz-result {
+    text-align: center;
+    padding: 32px 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  .qz-result-score {
+    font-size: 2.6rem;
+    font-weight: 800;
+    margin: 6px 0;
+  }
+
+  .qz-result-squares { font-size: 1.6rem; letter-spacing: 4px; margin: 10px 0 18px; }
+
+  .qz-result-streak { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 20px; }
+
+  .qz-share-btn {
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .qz-share-btn:hover { opacity: 0.9; }
+
+  .qz-share-status { margin-top: 10px; font-size: 0.82rem; color: var(--text-dim); min-height: 1.2em; }
+
+  .qz-info-block { margin-top: 40px; }
+  .qz-info-block h2 { font-size: 1.2rem; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/quiz.html">Quiz</a>
+      <a href="/tools.html">Инструменты</a>
+      <a href="/game.html">Игра</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>КодБлог Quiz</h1>
+    <p>5 вопросов в день про JavaScript, Python, Git, алгоритмы, веб и базы данных. Один заход в день, как в Wordle.</p>
+  </section>
+
+  <div style="margin-top:20px" id="qz-app"></div>
+
+  <div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6965581425781569" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+
+  <article class="post qz-info-block">
+    <h2>Как это работает</h2>
+    <p>Каждый день формируется новый набор из 5 вопросов — все, кто заходит в этот день, получают одинаковый квиз. За день доступна только одна попытка, результат сохраняется в браузере. Пропустите день — серия (streak) обнулится, как в большинстве ежедневных игр.</p>
+    <h3>Часто задаваемые вопросы</h3>
+    <p><strong>Можно ли пройти квиз ещё раз в этот же день?</strong><br>Нет, вернитесь завтра за новым набором вопросов.</p>
+    <p><strong>Что такое серия?</strong><br>Количество дней подряд, когда вы проходили квиз без пропусков.</p>
+    <a class="back-link" href="/">← На главную</a>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/quiz.html">Quiz</a>
+    <a href="/tools.html">Инструменты</a>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+    <a href="https://t.me/kodblog_dev" target="_blank" rel="noopener">Telegram</a>
+  </div>
+  <div style="margin-top:8px">© <span id="year"></span> КодБлог</div>
+</footer>
+
+<div class="love-note">Я люблю Алину Цой (Билялову)</div>
+
+<script>
+(function () {
+  "use strict";
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  var QUESTIONS = [
+    {c:"JavaScript", q:'Что вернёт `typeof null` в JavaScript?', o:['"object"','"null"','"undefined"','"number"'], a:0, e:'Это исторический баг JS, сохранённый ради обратной совместимости: `typeof null` возвращает "object".'},
+    {c:"JavaScript", q:'Какой метод массива добавляет элемент в конец?', o:['push','shift','unshift','pop'], a:0, e:'`push` добавляет элемент в конец массива и возвращает новую длину массива.'},
+    {c:"JavaScript", q:'Чем `===` отличается от `==`?', o:['Не делает приведения типов','Работает только с числами','Ничем, это синонимы','Сравнивает только ссылки на объекты'], a:0, e:'`===` сравнивает и тип, и значение без приведения типов: `"1" === 1` — false, а `"1" == 1` — true.'},
+    {c:"JavaScript", q:'Что такое замыкание (closure)?', o:['Функция, которая помнит переменные из своей области видимости','Способ закрыть цикл','Синтаксис для приватных классов','Ошибка выполнения кода'], a:0, e:'Замыкание сохраняет доступ к переменным внешней функции даже после её завершения.'},
+    {c:"JavaScript", q:'Что вернёт `0.1 + 0.2 === 0.3`?', o:['false','true','NaN','TypeError'], a:0, e:'Из-за представления чисел с плавающей точкой `0.1 + 0.2` равно `0.30000000000000004`, а не ровно `0.3`.'},
+    {c:"JavaScript", q:'В чём разница между `let` и `var`?', o:['`let` имеет блочную область видимости, `var` — функциональную','`var` появился позже и современнее','`let` нельзя переопределять никогда','Разницы нет'], a:0, e:'`var` виден во всей функции независимо от блоков `{}`, а `let` ограничен ближайшим блоком.'},
+    {c:"JavaScript", q:'Какие состояния может иметь Promise?', o:['pending, fulfilled, rejected','open, closed','start, end','true, false, null'], a:0, e:'Promise всегда в одном из трёх состояний: ожидание, выполнено или отклонено.'},
+    {c:"JavaScript", q:'Что возвращает `Array.prototype.map`?', o:['Новый массив','Число элементов','Исходный массив, изменённый на месте','undefined'], a:0, e:'`map` создаёт новый массив, не изменяя исходный.'},
+    {c:"JavaScript", q:'Зачем нужна директива `"use strict"`?', o:['Включает строгий режим, который ловит тихие ошибки','Ускоряет выполнение кода в 2 раза','Отключает поддержку старых браузеров','Добавляет типизацию как в TypeScript'], a:0, e:'Строгий режим превращает часть тихих ошибок в явные исключения и запрещает небезопасные конструкции.'},
+    {c:"JavaScript", q:'Что выполняется раньше: синхронный код, микрозадачи (Promise) или макрозадачи (setTimeout)?', o:['Сначала синхронный код, потом микрозадачи, потом макрозадачи','Сначала setTimeout','Порядок случайный','Сначала микрозадачи, потом синхронный код'], a:0, e:'Event loop выполняет весь синхронный код, затем опустошает очередь микрозадач, и только потом переходит к макрозадачам.'},
+
+    {c:"Python", q:'Что вернёт `len()` для словаря?', o:['Количество ключей','Сумму значений','Количество символов','Ошибку'], a:0, e:'Для `dict` `len()` возвращает количество пар ключ-значение.'},
+    {c:"Python", q:'Чем `tuple` принципиально отличается от `list`?', o:['Кортеж неизменяем (immutable)','Кортеж работает быстрее в 10 раз всегда','Список нельзя перебрать в цикле','Кортеж может содержать только числа'], a:0, e:'После создания элементы кортежа нельзя изменить, добавить или удалить.'},
+    {c:"Python", q:'Что такое GIL в CPython?', o:['Global Interpreter Lock — блокировка, разрешающая выполнять байткод только одному потоку одновременно','Библиотека для графики','Инструмент линтинга кода','Формат сериализации данных'], a:0, e:'GIL не даёт нескольким потокам одновременно выполнять байткод, поэтому потоки плохо помогают для CPU-bound задач.'},
+    {c:"Python", q:'Как выглядит list comprehension для квадратов чисел от 0 до 4?', o:['[x**2 for x in range(5)]','for x in range(5): x**2','list(x**2, range(5))','{x**2 for range(5)}'], a:0, e:'Синтаксис: `[выражение for переменная in последовательность]`.'},
+    {c:"Python", q:'Что проверяет оператор `is` в Python?', o:['Что это один и тот же объект в памяти (identity)','Равенство значений','Тип переменной','Всегда возвращает True для чисел'], a:0, e:'`is` сравнивает идентичность объектов, а не их значения.'},
+    {c:"Python", q:'В чём известная ловушка изменяемого аргумента по умолчанию, например `def f(x=[])`?', o:['Список создаётся один раз и переиспользуется между вызовами функции','Python выдаёт ошибку при определении функции','Список автоматически очищается при каждом вызове','Никакой ловушки нет'], a:0, e:'Значения по умолчанию вычисляются один раз при определении функции — изменяемый объект сохраняет состояние между вызовами.'},
+    {c:"Python", q:'Что собирает `*args` в определении функции?', o:['Позиционные аргументы в кортеж','Именованные аргументы в словарь','Только один аргумент','Ничего, это синтаксическая ошибка'], a:0, e:'`*args` собирает произвольное число позиционных аргументов в кортеж, `**kwargs` — именованные в словарь.'},
+    {c:"Python", q:'Сколько пробелов рекомендует PEP 8 для отступа?', o:['4','2','8','Табуляцию, а не пробелы'], a:0, e:'PEP 8 рекомендует 4 пробела на уровень отступа.'},
+
+    {c:"Git", q:'Какая команда показывает историю коммитов?', o:['git log','git history','git commits','git show-all'], a:0, e:'`git log` выводит историю коммитов текущей ветки.'},
+    {c:"Git", q:'Какая команда создаёт новую ветку и сразу переключается на неё?', o:['git checkout -b <имя>','git branch <имя>','git new-branch <имя>','git switch <имя>'], a:0, e:'`git checkout -b` (или `git switch -c`) создаёт ветку и сразу переключается на неё; `git branch` только создаёт.'},
+    {c:"Git", q:'В чём принципиальная разница между merge и rebase?', o:['merge создаёт merge-коммит и сохраняет историю как есть, rebase переписывает коммиты поверх другой ветки','Это два названия одной и той же команды','rebase удаляет все коммиты','merge работает только с одной веткой'], a:0, e:'`merge` объединяет ветки явным merge-коммитом, `rebase` переносит коммиты, создавая линейную историю.'},
+    {c:"Git", q:'Зачем нужен файл `.gitignore`?', o:['Указывает, какие файлы Git не должен отслеживать','Хранит историю коммитов','Обязателен для любого репозитория','Задаёт права доступа к репозиторию'], a:0, e:'`.gitignore` перечисляет файлы и папки, которые Git должен игнорировать.'},
+    {c:"Git", q:'Для чего используется `git stash`?', o:['Временно отложить незакоммиченные изменения, не создавая коммит','Удалить последний коммит','Склонировать репозиторий','Слить две ветки'], a:0, e:'`git stash` откладывает изменения в сторону, позволяя вернуть их позже командой `git stash pop`.'},
+    {c:"Git", q:'Что такое HEAD в Git?', o:['Указатель на текущий коммит/ветку, с которой вы сейчас работаете','Первый коммит в истории репозитория','Главная ветка репозитория','Файл со списком авторов'], a:0, e:'HEAD указывает на то, где вы находитесь прямо сейчас — обычно на кончик текущей ветки.'},
+    {c:"Git", q:'Какая команда отменяет последний коммит, но оставляет изменения в staged-состоянии?', o:['git reset --soft HEAD~1','git reset --hard HEAD~1','git revert --hard','git commit --undo'], a:0, e:'`--soft` откатывает ветку на предыдущий коммит, оставляя изменения проиндексированными.'},
+    {c:"Git", q:'В чём разница между fork и clone?', o:['Fork создаёт копию репозитория на хостинге под вашим аккаунтом, clone скачивает репозиторий локально','Это одно и то же','Clone работает только с приватными репозиториями','Fork удаляет историю коммитов'], a:0, e:'Fork — концепция платформы (GitHub), clone — команда Git, скачивающая репозиторий на локальную машину.'},
+
+    {c:"Алгоритмы", q:'Какая сложность у бинарного поиска в отсортированном массиве?', o:['O(log n)','O(n)','O(n²)','O(1)'], a:0, e:'На каждом шаге бинарный поиск отбрасывает половину оставшихся элементов.'},
+    {c:"Алгоритмы", q:'Какая структура данных работает по принципу LIFO (последним пришёл — первым вышел)?', o:['Стек (stack)','Очередь (queue)','Связный список','Дерево'], a:0, e:'Стек добавляет и удаляет элементы с одного конца — последний добавленный извлекается первым.'},
+    {c:"Алгоритмы", q:'Какая структура данных работает по принципу FIFO (первым пришёл — первым вышел)?', o:['Очередь (queue)','Стек (stack)','Хеш-таблица','Куча (heap)'], a:0, e:'В очереди элементы извлекаются в порядке поступления.'},
+    {c:"Алгоритмы", q:'Какова сложность доступа к элементу массива по индексу?', o:['O(1)','O(n)','O(log n)','O(n²)'], a:0, e:'Зная индекс, адрес элемента вычисляется напрямую — это операция за константное время.'},
+    {c:"Алгоритмы", q:'Какой алгоритм сортировки гарантирует O(n log n) и в худшем случае, и является стабильным?', o:['Сортировка слиянием (merge sort)','Быстрая сортировка (quicksort)','Сортировка пузырьком','Сортировка выбором'], a:0, e:'Merge sort всегда делит массив пополам, гарантируя O(n log n) даже в худшем случае, в отличие от quicksort.'},
+    {c:"Алгоритмы", q:'Какая средняя сложность поиска в хеш-таблице?', o:['O(1)','O(n)','O(log n)','O(n log n)'], a:0, e:'В среднем случае хеш-функция позволяет находить элемент почти мгновенно.'},
+    {c:"Алгоритмы", q:'Что обязательно должно быть у рекурсивной функции, чтобы она не зависла в бесконечном вызове?', o:['Базовый случай (условие остановки)','Цикл for внутри','Глобальная переменная','Аргумент типа число'], a:0, e:'Базовый случай — условие, при котором функция перестаёт вызывать саму себя.'},
+    {c:"Алгоритмы", q:'Какой обход дерева посещает сначала корень, потом левое поддерево, потом правое?', o:['Pre-order','In-order','Post-order','Level-order'], a:0, e:'Pre-order посещает узел, затем рекурсивно левое поддерево, затем правое.'},
+
+    {c:"Веб", q:'Какой код состояния HTTP означает "не найдено"?', o:['404','200','500','301'], a:0, e:'404 Not Found означает, что сервер не смог найти запрошенный ресурс.'},
+    {c:"Веб", q:'Какой HTTP-метод считается безопасным и идемпотентным для чтения данных?', o:['GET','POST','DELETE','PATCH'], a:0, e:'GET не должен изменять состояние сервера и при повторных запросах возвращает тот же результат.'},
+    {c:"Веб", q:'Что означает аббревиатура CORS?', o:['Cross-Origin Resource Sharing','Client Origin Request Security','Cross-Origin Request Server','Common Origin Resource Standard'], a:0, e:'CORS регулирует, каким сайтам разрешено делать запросы к ресурсам с другого домена.'},
+    {c:"Веб", q:'Что означает код состояния HTTP 500?', o:['Внутренняя ошибка сервера','Ресурс не найден','Успешный запрос','Требуется авторизация'], a:0, e:'500 Internal Server Error означает непредвиденную ошибку на сервере.'},
+    {c:"Веб", q:'В чём ключевое отличие cookie от localStorage?', o:['Cookie автоматически отправляется на сервер с каждым запросом, localStorage — нет','localStorage не поддерживается в браузерах','Cookie нельзя использовать для авторизации','Разницы нет'], a:0, e:'Cookie прикрепляется к каждому HTTP-запросу, localStorage — чисто клиентское хранилище.'},
+    {c:"Веб", q:'В чём разница между редиректами 301 и 302?', o:['301 — постоянный редирект, 302 — временный','301 быстрее, чем 302','302 нельзя кешировать никогда','Разницы для SEO нет'], a:0, e:'301 говорит навсегда запомнить новый адрес, 302 — что переезд временный.'},
+    {c:"Веб", q:'Какой порт используется по умолчанию для HTTPS?', o:['443','80','8080','21'], a:0, e:'HTTP использует порт 80, а защищённый HTTPS — порт 443.'},
+    {c:"Веб", q:'Какой принцип REST говорит, что сервер не должен хранить состояние клиента между запросами?', o:['Statelessness (безсостояние)','Cacheability','Layered system','Uniform interface'], a:0, e:'Каждый запрос должен содержать всю нужную информацию — сервер не хранит сессию между запросами.'},
+
+    {c:"Базы данных", q:'Какая SQL-команда используется для получения данных из таблицы?', o:['SELECT','GET','FETCH','READ'], a:0, e:'`SELECT` — базовая команда SQL для выборки данных.'},
+    {c:"Базы данных", q:'Для чего нужен первичный ключ (primary key)?', o:['Однозначно идентифицирует каждую строку таблицы','Ускоряет только запись, но не чтение','Хранит резервную копию данных','Обязателен только для внешних таблиц'], a:0, e:'Primary key гарантирует уникальность и не-NULL значение для каждой строки.'},
+    {c:"Базы данных", q:'Что означает аббревиатура ACID?', o:['Atomicity, Consistency, Isolation, Durability','Access, Control, Index, Data','Automatic, Cached, Indexed, Distributed','Atomic, Consistent, Indexed, Durable'], a:0, e:'ACID — гарантии транзакций: атомарность, согласованность, изолированность, устойчивость.'},
+    {c:"Базы данных", q:'В чём разница между INNER JOIN и LEFT JOIN?', o:['INNER JOIN возвращает только совпадающие строки, LEFT JOIN — ещё и все строки левой таблицы','Это одно и то же','LEFT JOIN нельзя использовать с условием WHERE','INNER JOIN работает быстрее всегда'], a:0, e:'LEFT JOIN добавляет все строки левой таблицы, даже без совпадения справа.'},
+    {c:"Базы данных", q:'Зачем в базе данных нужны индексы?', o:['Ускоряют чтение, но замедляют запись и занимают место','Ускоряют запись, но замедляют чтение','Обязательны для каждой колонки без исключений','Хранят резервную копию таблицы'], a:0, e:'Индекс ускоряет поиск по колонке, но требует места и обновления при каждой записи.'},
+    {c:"Базы данных", q:'Какая из этих баз данных — пример NoSQL документной СУБД?', o:['MongoDB','PostgreSQL','MySQL','SQLite'], a:0, e:'MongoDB хранит данные в виде JSON-подобных документов без строгой табличной схемы.'},
+    {c:"Базы данных", q:'Какова основная цель нормализации базы данных?', o:['Уменьшить избыточность (дублирование) данных','Увеличить объём хранимых данных','Ускорить любые запросы без исключений','Убрать необходимость в первичных ключах'], a:0, e:'Нормализация разбивает данные на связанные таблицы, чтобы не хранить одну информацию в нескольких местах.'},
+    {c:"Базы данных", q:'Что такое проблема N+1 запросов?', o:['Когда приложение делает один запрос, а затем ещё N дополнительных запросов на каждый результат','Когда в таблице ровно N+1 строк','Ошибка синтаксиса SQL','Способ ускорить запросы через кеширование'], a:0, e:'Пример: получить N постов одним запросом, а потом для каждого отдельно запрашивать автора — N+1 запросов вместо одного JOIN.'}
+  ];
+
+  var STORAGE_KEY = "kodblog-quiz-v1";
+  var EPOCH = new Date(2026, 6, 26); // квиз #1
+
+  function todayKey(d) {
+    d = d || new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  function quizNumber() {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var epoch = new Date(EPOCH); epoch.setHours(0, 0, 0, 0);
+    return Math.floor((today - epoch) / 86400000) + 1;
+  }
+
+  function mulberry32(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function seededShuffle(arr, seed) {
+    var rand = mulberry32(seed);
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rand() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function getTodaysQuestions() {
+    var n = quizNumber();
+    var order = seededShuffle(QUESTIONS.map(function (_, i) { return i; }), n * 2654435761);
+    var picked = order.slice(0, 5);
+    return picked.map(function (qIndex, pos) {
+      var src = QUESTIONS[qIndex];
+      var optOrder = seededShuffle([0, 1, 2, 3], n * 97 + qIndex * 31 + pos);
+      var options = optOrder.map(function (oi) { return src.o[oi]; });
+      var correctPos = optOrder.indexOf(src.a);
+      return { c: src.c, q: src.q, o: options, a: correctPos, e: src.e };
+    });
+  }
+
+  function loadState() {
+    var raw = null;
+    try { raw = localStorage.getItem(STORAGE_KEY); } catch (err) {}
+    var def = { lastDate: null, lastQuizNumber: null, lastScore: 0, lastPattern: [], streak: 0, best: 0 };
+    if (!raw) return def;
+    try { return Object.assign(def, JSON.parse(raw)); } catch (err) { return def; }
+  }
+
+  function saveState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (err) {}
+  }
+
+  var app = document.getElementById("qz-app");
+  var state = loadState();
+  var today = todayKey();
+  var qNum = quizNumber();
+
+  if (state.lastDate === today) {
+    renderResult(state.lastScore, state.lastPattern, state, true);
+  } else {
+    renderQuiz();
+  }
+
+  function renderQuiz() {
+    var questions = getTodaysQuestions();
+    var pos = 0;
+    var pattern = [];
+
+    app.innerHTML =
+      '<div class="qz-topbar"><span>Квиз #' + qNum + '</span><span class="qz-streak">🔥 Серия: ' + state.streak + '</span></div>' +
+      '<div class="qz-progress" id="qz-progress"></div>' +
+      '<div class="qz-card" id="qz-card"></div>';
+
+    var progressEl = document.getElementById("qz-progress");
+    var cardEl = document.getElementById("qz-card");
+
+    function renderProgress() {
+      progressEl.innerHTML = questions.map(function (_, i) {
+        var cls = "qz-dot";
+        if (pattern[i] === true) cls += " is-correct";
+        else if (pattern[i] === false) cls += " is-wrong";
+        else if (i === pos) cls += " is-current";
+        return '<div class="' + cls + '"></div>';
+      }).join("");
+    }
+
+    function renderQuestion() {
+      renderProgress();
+      var item = questions[pos];
+      cardEl.innerHTML =
+        '<span class="qz-category">' + item.c + '</span>' +
+        '<div class="qz-question">' + (pos + 1) + '/' + questions.length + '. ' + item.q + '</div>' +
+        '<div class="qz-options" id="qz-options"></div>' +
+        '<div class="qz-explanation" id="qz-explanation"></div>' +
+        '<button class="qz-next" id="qz-next" type="button">' + (pos === questions.length - 1 ? "Результат →" : "Далее →") + '</button>';
+
+      var optionsEl = document.getElementById("qz-options");
+      optionsEl.innerHTML = item.o.map(function (opt, i) {
+        return '<button class="qz-option" type="button" data-i="' + i + '">' + opt + '</button>';
+      }).join("");
+
+      optionsEl.addEventListener("click", function handler(e) {
+        var btn = e.target.closest(".qz-option");
+        if (!btn) return;
+        optionsEl.removeEventListener("click", handler);
+
+        var chosen = Number(btn.dataset.i);
+        var correct = chosen === item.a;
+        pattern[pos] = correct;
+
+        optionsEl.querySelectorAll(".qz-option").forEach(function (b, i) {
+          b.disabled = true;
+          if (i === item.a) b.classList.add("is-correct");
+          else if (i === chosen) b.classList.add("is-wrong");
+        });
+
+        var explEl = document.getElementById("qz-explanation");
+        explEl.textContent = item.e;
+        explEl.classList.add("is-visible");
+
+        renderProgress();
+        document.getElementById("qz-next").classList.add("is-visible");
+      });
+
+      document.getElementById("qz-next").addEventListener("click", function () {
+        pos++;
+        if (pos < questions.length) {
+          renderQuestion();
+        } else {
+          finish();
+        }
+      });
+    }
+
+    function finish() {
+      var score = pattern.filter(Boolean).length;
+      var yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+      var newStreak = state.lastDate === todayKey(yesterday) ? state.streak + 1 : 1;
+      var newState = {
+        lastDate: today,
+        lastQuizNumber: qNum,
+        lastScore: score,
+        lastPattern: pattern,
+        streak: newStreak,
+        best: Math.max(state.best || 0, newStreak)
+      };
+      saveState(newState);
+      state = newState;
+      renderResult(score, pattern, newState, false);
+    }
+
+    renderQuestion();
+  }
+
+  function renderResult(score, pattern, st, alreadyPlayed) {
+    var squares = pattern.map(function (ok) { return ok ? "🟩" : "🟥"; }).join("");
+    var shareText = "КодБлог Quiz #" + (st.lastQuizNumber || qNum) + ": " + score + "/5\n" + squares + "\nhttps://tsoysasha96-svg.github.io/quiz.html";
+
+    app.innerHTML =
+      '<div class="qz-result">' +
+        (alreadyPlayed ? '<div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:6px">Вы уже прошли квиз #' + (st.lastQuizNumber || qNum) + ' сегодня</div>' : '') +
+        '<div class="qz-result-score">' + score + '/5</div>' +
+        '<div class="qz-result-squares">' + squares + '</div>' +
+        '<div class="qz-result-streak">🔥 Серия: ' + st.streak + ' ' + (st.best ? '· Лучшая: ' + st.best : '') + '</div>' +
+        '<button class="qz-share-btn" id="qz-share" type="button">Скопировать результат</button>' +
+        '<div class="qz-share-status" id="qz-share-status"></div>' +
+        (alreadyPlayed ? '<div style="margin-top:16px;color:var(--text-dim);font-size:0.85rem">Новый квиз — завтра</div>' : '') +
+      '</div>';
+
+    document.getElementById("qz-share").addEventListener("click", function () {
+      navigator.clipboard.writeText(shareText).then(function () {
+        document.getElementById("qz-share-status").textContent = "Скопировано ✓ — вставьте в чат или Telegram";
+      }).catch(function () {
+        document.getElementById("qz-share-status").textContent = "Не удалось скопировать — скопируйте вручную.";
+      });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
