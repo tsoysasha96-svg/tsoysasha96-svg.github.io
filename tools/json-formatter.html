@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JSON Formatter & Validator онлайн — бесплатно, без регистрации | КодБлог</title>
+<meta name="description" content="Бесплатный JSON formatter онлайн: форматирование, минификация и валидация JSON прямо в браузере. Показывает точное место ошибки. Ничего не отправляется на сервер.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="../style.css">
+<script src="../enhance.js" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<link rel="alternate" type="application/rss+xml" title="КодБлог" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="КодБлог">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="JSON Formatter & Validator онлайн — бесплатно">
+<meta property="og:description" content="Форматирование, минификация и валидация JSON прямо в браузере. Ничего не отправляется на сервер.">
+<meta property="og:url" content="https://tsoysasha96-svg.github.io/tools/json-formatter.html">
+<meta property="og:image" content="https://tsoysasha96-svg.github.io/og/default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON Formatter & Validator онлайн — бесплатно">
+<meta name="twitter:description" content="Форматирование, минификация и валидация JSON прямо в браузере.">
+<meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/default.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "JSON Formatter & Validator",
+  "url": "https://tsoysasha96-svg.github.io/tools/json-formatter.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Бесплатный онлайн-инструмент для форматирования, минификации и валидации JSON."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Отправляются ли мои данные на сервер?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Нет. Весь JSON обрабатывается прямо в вашем браузере с помощью JavaScript. Данные никуда не отправляются и не сохраняются." }
+    },
+    {
+      "@type": "Question",
+      "name": "Почему инструмент пишет, что JSON невалиден?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Чаще всего причина — лишняя запятая перед закрывающей скобкой, одинарные кавычки вместо двойных, незакрытая строка или комментарий (JSON не поддерживает комментарии). Инструмент показывает строку и позицию, где парсер обнаружил ошибку." }
+    },
+    {
+      "@type": "Question",
+      "name": "Чем форматирование отличается от минификации?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Форматирование добавляет отступы и переносы строк, чтобы JSON было удобно читать. Минификация убирает все лишние пробелы и переносы, чтобы JSON занимал меньше места — обычно так его отправляют по сети." }
+    }
+  ]
+}
+</script>
+<style>
+  .jt-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .jt-btn {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .jt-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .jt-btn--primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .jt-btn--primary:hover { color: #fff; opacity: 0.9; }
+
+  .jt-select {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+  }
+
+  .jt-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  @media (min-width: 800px) {
+    .jt-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .jt-panel-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .jt-textarea, .jt-output {
+    width: 100%;
+    height: 380px;
+    box-sizing: border-box;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    resize: vertical;
+    tab-size: 2;
+  }
+
+  .jt-output {
+    margin: 0;
+    overflow: auto;
+    white-space: pre;
+  }
+
+  .jt-status {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: none;
+  }
+
+  .jt-status.is-ok {
+    display: block;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #16a34a;
+  }
+
+  .jt-status.is-error {
+    display: block;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+  }
+
+  .jt-tokstring { color: #22c55e; }
+  .jt-toknumber { color: #f59e0b; }
+  .jt-tokbool { color: #a855f7; }
+  .jt-toknull { color: var(--text-dim); }
+  .jt-tokkey { color: var(--accent); }
+
+  .jt-info-block { margin-top: 40px; }
+  .jt-info-block h2 { font-size: 1.2rem; }
+  .jt-info-block h3 { font-size: 1rem; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/tools.html">Инструменты</a>
+      <a href="/game.html">Игра</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>JSON Formatter &amp; Validator</h1>
+    <p>Форматирование, минификация и проверка JSON прямо в браузере. Ничего не отправляется на сервер — всё работает локально.</p>
+  </section>
+
+  <div style="margin-top:20px">
+    <div class="jt-toolbar">
+      <button class="jt-btn jt-btn--primary" id="jt-format" type="button">Форматировать</button>
+      <button class="jt-btn" id="jt-minify" type="button">Минифицировать</button>
+      <button class="jt-btn" id="jt-validate" type="button">Только проверить</button>
+      <select class="jt-select" id="jt-indent">
+        <option value="2">Отступ: 2 пробела</option>
+        <option value="4">Отступ: 4 пробела</option>
+        <option value="tab">Отступ: Tab</option>
+      </select>
+      <button class="jt-btn" id="jt-sample" type="button">Пример</button>
+      <button class="jt-btn" id="jt-copy" type="button">Копировать результат</button>
+      <button class="jt-btn" id="jt-clear" type="button">Очистить</button>
+    </div>
+
+    <div class="jt-grid">
+      <div>
+        <div class="jt-panel-label">Вставьте JSON</div>
+        <textarea class="jt-textarea" id="jt-input" spellcheck="false" placeholder='{"hello": "world"}'></textarea>
+      </div>
+      <div>
+        <div class="jt-panel-label">Результат</div>
+        <pre class="jt-output" id="jt-output"></pre>
+      </div>
+    </div>
+
+    <div class="jt-status" id="jt-status"></div>
+
+    <div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6965581425781569" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+
+    <article class="post jt-info-block">
+      <h2>Что делает этот инструмент</h2>
+      <p>JSON formatter приводит «сжатый» или неаккуратно записанный JSON к читаемому виду с отступами, либо, наоборот, сжимает его в одну строку без пробелов (минификация) — так JSON обычно передают по сети. Валидатор проверяет, что структура корректна, и если нет — показывает, в какой строке и позиции парсер споткнулся.</p>
+
+      <h3>Частые ошибки в JSON</h3>
+      <ul>
+        <li>Лишняя запятая перед <code>}</code> или <code>]</code> — в JSON, в отличие от JS-объектов, висячая запятая запрещена.</li>
+        <li>Одинарные кавычки <code>'like this'</code> вместо двойных <code>"like this"</code>.</li>
+        <li>Ключи объекта без кавычек: <code>{name: "Alex"}</code> вместо <code>{"name": "Alex"}</code>.</li>
+        <li>Комментарии — JSON не поддерживает <code>//</code> или <code>/* */</code>.</li>
+        <li>Незакрытые строки или скобки.</li>
+      </ul>
+
+      <h3>Часто задаваемые вопросы</h3>
+      <p><strong>Отправляются ли мои данные на сервер?</strong><br>Нет, весь разбор происходит локально в браузере через <code>JSON.parse</code>. Ничего не сохраняется и никуда не уходит.</p>
+      <p><strong>Чем форматирование отличается от минификации?</strong><br>Форматирование добавляет отступы для читаемости, минификация убирает всё лишнее, чтобы JSON занимал меньше места.</p>
+
+      <a class="back-link" href="/tools.html">← Все инструменты</a>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/tools.html">Инструменты</a>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+    <a href="https://t.me/kodblog_dev" target="_blank" rel="noopener">Telegram</a>
+  </div>
+  <div style="margin-top:8px">© <span id="year"></span> КодБлог</div>
+</footer>
+
+<div class="love-note">Я люблю Алину Цой (Билялову)</div>
+
+<script>
+(function () {
+  "use strict";
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  var input = document.getElementById("jt-input");
+  var output = document.getElementById("jt-output");
+  var status = document.getElementById("jt-status");
+  var indentSelect = document.getElementById("jt-indent");
+
+  var SAMPLE = '{\n  "name": "КодБлог",\n  "url": "https://tsoysasha96-svg.github.io",\n  "categories": ["backend", "frontend", "tools"],\n  "active": true,\n  "posts": 8,\n  "owner": null\n}';
+
+  function getIndent() {
+    var v = indentSelect.value;
+    return v === "tab" ? "\t" : Number(v);
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function highlight(json) {
+    var escaped = escapeHtml(json);
+    return escaped.replace(
+      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
+      function (match) {
+        var cls = "jt-toknumber";
+        if (/^"/.test(match)) {
+          cls = /:$/.test(match) ? "jt-tokkey" : "jt-tokstring";
+        } else if (/true|false/.test(match)) {
+          cls = "jt-tokbool";
+        } else if (/null/.test(match)) {
+          cls = "jt-toknull";
+        }
+        return '<span class="' + cls + '">' + match + "</span>";
+      }
+    );
+  }
+
+  function locateError(text, message) {
+    var m = /position (\d+)/.exec(message);
+    if (!m) return { clean: message, location: "" };
+    var pos = Number(m[1]);
+    var before = text.slice(0, pos);
+    var line = (before.match(/\n/g) || []).length + 1;
+    var col = pos - before.lastIndexOf("\n");
+    var clean = message.replace(/\s*\(line \d+ column \d+\)/, "");
+    return { clean: clean, location: " (строка " + line + ", позиция " + col + ")" };
+  }
+
+  function setStatus(ok, text) {
+    status.textContent = text;
+    status.className = "jt-status " + (ok ? "is-ok" : "is-error");
+  }
+
+  function run(mode) {
+    var text = input.value.trim();
+    if (!text) {
+      setStatus(false, "Вставьте JSON, чтобы продолжить.");
+      output.innerHTML = "";
+      return;
+    }
+    try {
+      var data = JSON.parse(text);
+      if (mode === "validate") {
+        setStatus(true, "JSON валиден ✓");
+        return;
+      }
+      var indent = getIndent();
+      var result = mode === "minify" ? JSON.stringify(data) : JSON.stringify(data, null, indent);
+      output.innerHTML = highlight(result);
+      setStatus(true, mode === "minify" ? "Минифицировано ✓" : "Отформатировано ✓");
+    } catch (err) {
+      var loc = locateError(text, err.message);
+      setStatus(false, "Невалидный JSON: " + loc.clean + loc.location);
+      if (mode !== "validate") output.innerHTML = "";
+    }
+  }
+
+  document.getElementById("jt-format").addEventListener("click", function () { run("format"); });
+  document.getElementById("jt-minify").addEventListener("click", function () { run("minify"); });
+  document.getElementById("jt-validate").addEventListener("click", function () { run("validate"); });
+  indentSelect.addEventListener("change", function () { if (output.textContent) run("format"); });
+
+  document.getElementById("jt-sample").addEventListener("click", function () {
+    input.value = SAMPLE;
+    run("format");
+  });
+
+  document.getElementById("jt-clear").addEventListener("click", function () {
+    input.value = "";
+    output.innerHTML = "";
+    status.className = "jt-status";
+  });
+
+  document.getElementById("jt-copy").addEventListener("click", function () {
+    var text = output.textContent;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(function () {
+      setStatus(true, "Результат скопирован в буфер обмена ✓");
+    }).catch(function () {
+      setStatus(false, "Не удалось скопировать — скопируйте вручную.");
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
