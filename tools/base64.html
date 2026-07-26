@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Base64 Encode & Decode онлайн — бесплатно, без регистрации | КодБлог</title>
+<meta name="description" content="Бесплатный Base64 encoder/decoder онлайн: кодирование и декодирование текста в Base64 прямо в браузере, с поддержкой UTF-8 и URL-safe формата. Ничего не отправляется на сервер.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="../style.css">
+<script src="../enhance.js" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<link rel="alternate" type="application/rss+xml" title="КодБлог" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="КодБлог">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Base64 Encode & Decode онлайн — бесплатно">
+<meta property="og:description" content="Кодирование и декодирование текста в Base64 прямо в браузере, с поддержкой UTF-8 и URL-safe формата.">
+<meta property="og:url" content="https://tsoysasha96-svg.github.io/tools/base64.html">
+<meta property="og:image" content="https://tsoysasha96-svg.github.io/og/default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Base64 Encode & Decode онлайн — бесплатно">
+<meta name="twitter:description" content="Кодирование и декодирование текста в Base64 прямо в браузере.">
+<meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/default.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Base64 Encode & Decode",
+  "url": "https://tsoysasha96-svg.github.io/tools/base64.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Бесплатный онлайн-инструмент для кодирования и декодирования Base64 с поддержкой UTF-8 и URL-safe формата."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Отправляются ли мои данные на сервер?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Нет. Кодирование и декодирование происходит прямо в браузере с помощью стандартных функций JavaScript. Ничего не сохраняется и не передаётся никуда." }
+    },
+    {
+      "@type": "Question",
+      "name": "Что такое URL-safe Base64?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Обычный Base64 использует символы + и /, которые имеют специальное значение в URL. URL-safe вариант заменяет их на - и _ и убирает завершающие =, чтобы строку можно было безопасно вставить в адрес страницы." }
+    },
+    {
+      "@type": "Question",
+      "name": "Почему декодирование выдаёт ошибку?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Обычно это значит, что строка не является валидным Base64 — в ней есть посторонние символы, неверная длина или она была обрезана. Инструмент понимает как обычный, так и URL-safe Base64 автоматически." }
+    }
+  ]
+}
+</script>
+<style>
+  .b64-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; align-items: center; }
+
+  .b64-btn {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .b64-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .b64-btn--primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .b64-btn--primary:hover { color: #fff; opacity: 0.9; }
+
+  .b64-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+
+  .b64-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 800px) { .b64-grid { grid-template-columns: 1fr 1fr; } }
+
+  .b64-panel-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .b64-textarea {
+    width: 100%;
+    height: 300px;
+    box-sizing: border-box;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    resize: vertical;
+  }
+
+  .b64-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 14px 0;
+  }
+
+  .b64-status {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: none;
+  }
+
+  .b64-status.is-ok {
+    display: block;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #16a34a;
+  }
+
+  .b64-status.is-error {
+    display: block;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+  }
+
+  .b64-info-block { margin-top: 40px; }
+  .b64-info-block h2 { font-size: 1.2rem; }
+  .b64-info-block h3 { font-size: 1rem; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/tools.html">Инструменты</a>
+      <a href="/game.html">Игра</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Base64 Encode &amp; Decode</h1>
+    <p>Кодирование и декодирование текста в Base64 прямо в браузере. Поддержка UTF-8 и URL-safe формата. Ничего не отправляется на сервер.</p>
+  </section>
+
+  <div style="margin-top:20px">
+    <div class="b64-toolbar">
+      <label class="b64-check"><input type="checkbox" id="b64-urlsafe"> URL-safe (<code>-_</code> вместо <code>+/</code>)</label>
+      <button class="b64-btn" id="b64-sample" type="button">Пример</button>
+      <button class="b64-btn" id="b64-clear" type="button">Очистить всё</button>
+    </div>
+
+    <div class="b64-grid">
+      <div>
+        <div class="b64-panel-label">
+          <span>Обычный текст</span>
+          <button class="b64-btn" id="b64-copy-text" type="button">Копировать</button>
+        </div>
+        <textarea class="b64-textarea" id="b64-text" spellcheck="false" placeholder="Введите текст…"></textarea>
+      </div>
+      <div>
+        <div class="b64-panel-label">
+          <span>Base64</span>
+          <button class="b64-btn" id="b64-copy-b64" type="button">Копировать</button>
+        </div>
+        <textarea class="b64-textarea" id="b64-b64" spellcheck="false" placeholder="Или вставьте Base64 сюда…"></textarea>
+      </div>
+    </div>
+
+    <div class="b64-arrows">
+      <button class="b64-btn b64-btn--primary" id="b64-encode" type="button">Кодировать →</button>
+      <button class="b64-btn b64-btn--primary" id="b64-decode" type="button">← Декодировать</button>
+    </div>
+
+    <div class="b64-status" id="b64-status"></div>
+
+    <div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6965581425781569" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+
+    <article class="post b64-info-block">
+      <h2>Что такое Base64</h2>
+      <p>Base64 — способ представить произвольные бинарные данные (или текст) в виде строки из 64 «безопасных» ASCII-символов. Используется, когда нужно передать данные там, где ожидается текст: во вложениях email, в data URL для изображений, в токенах авторизации, в конфигурационных файлах.</p>
+
+      <h3>Часто задаваемые вопросы</h3>
+      <p><strong>Отправляются ли мои данные на сервер?</strong><br>Нет, всё кодирование и декодирование происходит локально в браузере.</p>
+      <p><strong>Что такое URL-safe Base64?</strong><br>Вариант, где символы <code>+</code> и <code>/</code> заменены на <code>-</code> и <code>_</code>, а завершающие <code>=</code> убраны — чтобы строку можно было безопасно использовать в URL.</p>
+      <p><strong>Почему декодирование выдаёт ошибку?</strong><br>Значит, строка не является валидным Base64 — есть посторонние символы или неверная длина. Инструмент автоматически понимает и обычный, и URL-safe вариант.</p>
+
+      <a class="back-link" href="/tools.html">← Все инструменты</a>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/tools.html">Инструменты</a>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+    <a href="https://t.me/kodblog_dev" target="_blank" rel="noopener">Telegram</a>
+  </div>
+  <div style="margin-top:8px">© <span id="year"></span> КодБлог</div>
+</footer>
+
+<div class="love-note">Я люблю Алину Цой (Билялову)</div>
+
+<script>
+(function () {
+  "use strict";
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  var textEl = document.getElementById("b64-text");
+  var b64El = document.getElementById("b64-b64");
+  var status = document.getElementById("b64-status");
+  var urlSafe = document.getElementById("b64-urlsafe");
+
+  var SAMPLE = "КодБлог — заметки о программировании";
+
+  function setStatus(ok, text) {
+    status.textContent = text;
+    status.className = "b64-status " + (ok ? "is-ok" : "is-error");
+  }
+
+  function encodeBase64(text) {
+    var bytes = new TextEncoder().encode(text);
+    var binary = "";
+    for (var i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    var b64 = btoa(binary);
+    if (urlSafe.checked) b64 = b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    return b64;
+  }
+
+  function decodeBase64(str) {
+    var cleaned = str.trim().replace(/-/g, "+").replace(/_/g, "/");
+    while (cleaned.length % 4) cleaned += "=";
+    var binary = atob(cleaned);
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  }
+
+  document.getElementById("b64-encode").addEventListener("click", function () {
+    if (!textEl.value) { setStatus(false, "Введите текст для кодирования."); return; }
+    try {
+      b64El.value = encodeBase64(textEl.value);
+      setStatus(true, "Закодировано ✓");
+    } catch (e) {
+      setStatus(false, "Не удалось закодировать: " + e.message);
+    }
+  });
+
+  document.getElementById("b64-decode").addEventListener("click", function () {
+    if (!b64El.value) { setStatus(false, "Вставьте Base64 для декодирования."); return; }
+    try {
+      textEl.value = decodeBase64(b64El.value);
+      setStatus(true, "Декодировано ✓");
+    } catch (e) {
+      setStatus(false, "Невалидный Base64: строка повреждена или содержит посторонние символы.");
+    }
+  });
+
+  document.getElementById("b64-sample").addEventListener("click", function () {
+    textEl.value = SAMPLE;
+    b64El.value = encodeBase64(SAMPLE);
+    setStatus(true, "Пример загружен ✓");
+  });
+
+  document.getElementById("b64-clear").addEventListener("click", function () {
+    textEl.value = "";
+    b64El.value = "";
+    status.className = "b64-status";
+  });
+
+  function copyField(el) {
+    if (!el.value) return;
+    navigator.clipboard.writeText(el.value).then(function () {
+      setStatus(true, "Скопировано в буфер обмена ✓");
+    }).catch(function () {
+      setStatus(false, "Не удалось скопировать — скопируйте вручную.");
+    });
+  }
+
+  document.getElementById("b64-copy-text").addEventListener("click", function () { copyField(textEl); });
+  document.getElementById("b64-copy-b64").addEventListener("click", function () { copyField(b64El); });
+})();
+</script>
+
+</body>
+</html>

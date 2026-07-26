@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unix Timestamp Converter онлайн — конвертер времени | КодБлог</title>
+<meta name="description" content="Бесплатный конвертер Unix timestamp онлайн: переводит timestamp в дату и обратно, показывает текущее время в секундах и миллисекундах. Работает прямо в браузере.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="../style.css">
+<script src="../enhance.js" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<link rel="alternate" type="application/rss+xml" title="КодБлог" href="/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="КодБлог">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Unix Timestamp Converter онлайн">
+<meta property="og:description" content="Переводит Unix timestamp в дату и обратно, показывает текущее время в секундах и миллисекундах.">
+<meta property="og:url" content="https://tsoysasha96-svg.github.io/tools/timestamp-converter.html">
+<meta property="og:image" content="https://tsoysasha96-svg.github.io/og/default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Unix Timestamp Converter онлайн">
+<meta name="twitter:description" content="Переводит Unix timestamp в дату и обратно.">
+<meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/default.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Unix Timestamp Converter",
+  "url": "https://tsoysasha96-svg.github.io/tools/timestamp-converter.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Бесплатный онлайн-конвертер Unix timestamp в дату и обратно."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Что такое Unix timestamp?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Это количество секунд (или миллисекунд), прошедших с полуночи 1 января 1970 года по UTC — так называемой эпохи Unix. Используется в большинстве языков программирования и баз данных для хранения времени." }
+    },
+    {
+      "@type": "Question",
+      "name": "Как отличить секунды от миллисекунд?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Timestamp в секундах для текущих дат — это 10-значное число (например, 1785000000), а в миллисекундах — 13-значное (например, 1785000000000). Инструмент определяет единицу автоматически по количеству цифр." }
+    },
+    {
+      "@type": "Question",
+      "name": "В каком часовом поясе показывается результат?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Показываются оба варианта: локальное время браузера пользователя и время в UTC, чтобы не было путаницы с часовыми поясами." }
+    }
+  ]
+}
+</script>
+<style>
+  .ts-now {
+    text-align: center;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    margin-bottom: 20px;
+  }
+
+  .ts-now-value {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  .ts-now-sub { color: var(--text-dim); font-size: 0.82rem; margin-top: 4px; }
+
+  .ts-card {
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    margin-bottom: 18px;
+  }
+
+  .ts-card h2 { margin-top: 0; font-size: 1.05rem; }
+
+  .ts-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+
+  .ts-input, .ts-select {
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .ts-input { flex: 1; min-width: 180px; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+
+  .ts-btn {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .ts-btn:hover { opacity: 0.9; }
+
+  .ts-btn--ghost {
+    background: var(--bg-card);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .ts-result {
+    display: grid;
+    gap: 6px;
+    font-size: 0.9rem;
+  }
+
+  .ts-result-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .ts-result-label { color: var(--text-dim); }
+  .ts-result-value { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; text-align: right; word-break: break-all; }
+
+  .ts-status {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: none;
+  }
+
+  .ts-status.is-error {
+    display: block;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+  }
+
+  .ts-info-block { margin-top: 40px; }
+  .ts-info-block h2 { font-size: 1.2rem; }
+  .ts-info-block h3 { font-size: 1rem; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/tools.html">Инструменты</a>
+      <a href="/game.html">Игра</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Unix Timestamp Converter</h1>
+    <p>Переводит timestamp в дату и обратно. Работает прямо в браузере, ничего не отправляется на сервер.</p>
+  </section>
+
+  <div style="margin-top:20px">
+    <div class="ts-now">
+      <div class="ts-now-value" id="ts-now-seconds">—</div>
+      <div class="ts-now-sub">текущий Unix timestamp, секунды · <span id="ts-now-ms">—</span> мс</div>
+    </div>
+
+    <div class="ts-card">
+      <h2>Timestamp → Дата</h2>
+      <div class="ts-row">
+        <input class="ts-input" id="ts-input-value" type="text" placeholder="Например, 1785000000">
+        <select class="ts-select" id="ts-unit">
+          <option value="auto">Авто (по длине числа)</option>
+          <option value="s">Секунды</option>
+          <option value="ms">Миллисекунды</option>
+        </select>
+        <button class="ts-btn" id="ts-convert" type="button">Конвертировать</button>
+        <button class="ts-btn ts-btn--ghost" id="ts-use-now" type="button">Сейчас</button>
+      </div>
+      <div class="ts-result" id="ts-result"></div>
+      <div class="ts-status" id="ts-status"></div>
+    </div>
+
+    <div class="ts-card">
+      <h2>Дата → Timestamp</h2>
+      <div class="ts-row">
+        <input class="ts-input" id="ts-date-input" type="datetime-local" step="1">
+        <button class="ts-btn" id="ts-date-convert" type="button">Конвертировать</button>
+      </div>
+      <div class="ts-result" id="ts-date-result"></div>
+    </div>
+
+    <div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6965581425781569" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+
+    <article class="post ts-info-block">
+      <h2>Что такое Unix timestamp</h2>
+      <p>Unix timestamp — количество секунд, прошедших с полуночи 1 января 1970 года по UTC (эта дата называется epoch, «эпоха Unix»). Это универсальный способ хранить момент времени числом, без привязки к часовому поясу и формату даты — поэтому он широко используется в базах данных, API и логах.</p>
+
+      <h3>Секунды или миллисекунды?</h3>
+      <p>Для текущих дат timestamp в секундах — это 10-значное число, а в миллисекундах — 13-значное. JavaScript (<code>Date.now()</code>) и большинство веб-API отдают миллисекунды, а Unix-системы и многие бэкенды — секунды.</p>
+
+      <h3>Часто задаваемые вопросы</h3>
+      <p><strong>В каком часовом поясе результат?</strong><br>Показываются сразу оба варианта — локальное время браузера и UTC — чтобы не путаться.</p>
+      <p><strong>Отправляются ли данные на сервер?</strong><br>Нет, все вычисления происходят локально с помощью стандартного объекта <code>Date</code> в JavaScript.</p>
+
+      <a class="back-link" href="/tools.html">← Все инструменты</a>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/tools.html">Инструменты</a>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+    <a href="https://t.me/kodblog_dev" target="_blank" rel="noopener">Telegram</a>
+  </div>
+  <div style="margin-top:8px">© <span id="year"></span> КодБлог</div>
+</footer>
+
+<div class="love-note">Я люблю Алину Цой (Билялову)</div>
+
+<script>
+(function () {
+  "use strict";
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  var nowSecondsEl = document.getElementById("ts-now-seconds");
+  var nowMsEl = document.getElementById("ts-now-ms");
+
+  function tickNow() {
+    var now = Date.now();
+    nowSecondsEl.textContent = Math.floor(now / 1000);
+    nowMsEl.textContent = now;
+  }
+  tickNow();
+  setInterval(tickNow, 1000);
+
+  function pad(n) { return String(n).padStart(2, "0"); }
+
+  function formatLocal(d) {
+    return d.toLocaleString("ru-RU", {
+      year: "numeric", month: "long", day: "numeric",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      timeZoneName: "short"
+    });
+  }
+
+  function formatUTC(d) {
+    return d.getUTCFullYear() + "-" + pad(d.getUTCMonth() + 1) + "-" + pad(d.getUTCDate()) +
+      " " + pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds()) + " UTC";
+  }
+
+  function relative(d) {
+    var diffMs = Date.now() - d.getTime();
+    var future = diffMs < 0;
+    var diff = Math.abs(diffMs) / 1000;
+    var units = [
+      ["год", "года", "лет", 31536000],
+      ["месяц", "месяца", "месяцев", 2592000],
+      ["день", "дня", "дней", 86400],
+      ["час", "часа", "часов", 3600],
+      ["минуту", "минуты", "минут", 60],
+      ["секунду", "секунды", "секунд", 1]
+    ];
+    for (var i = 0; i < units.length; i++) {
+      var amount = Math.floor(diff / units[i][3]);
+      if (amount >= 1) {
+        var word = pluralRu(amount, units[i][0], units[i][1], units[i][2]);
+        return future ? "через " + amount + " " + word : amount + " " + word + " назад";
+      }
+    }
+    return "только что";
+  }
+
+  function pluralRu(n, one, few, many) {
+    var mod10 = n % 10, mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return one;
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return few;
+    return many;
+  }
+
+  function renderResult(container, d) {
+    container.innerHTML =
+      '<div class="ts-result-row"><span class="ts-result-label">Локальное время</span><span class="ts-result-value">' + formatLocal(d) + '</span></div>' +
+      '<div class="ts-result-row"><span class="ts-result-label">UTC</span><span class="ts-result-value">' + formatUTC(d) + '</span></div>' +
+      '<div class="ts-result-row"><span class="ts-result-label">ISO 8601</span><span class="ts-result-value">' + d.toISOString() + '</span></div>' +
+      '<div class="ts-result-row"><span class="ts-result-label">Unix (сек / мс)</span><span class="ts-result-value">' + Math.floor(d.getTime() / 1000) + ' / ' + d.getTime() + '</span></div>' +
+      '<div class="ts-result-row"><span class="ts-result-label">Относительно сейчас</span><span class="ts-result-value">' + relative(d) + '</span></div>';
+  }
+
+  var input = document.getElementById("ts-input-value");
+  var unitSelect = document.getElementById("ts-unit");
+  var resultEl = document.getElementById("ts-result");
+  var status = document.getElementById("ts-status");
+
+  function setError(text) {
+    status.textContent = text;
+    status.className = "ts-status" + (text ? " is-error" : "");
+  }
+
+  document.getElementById("ts-convert").addEventListener("click", function () {
+    var raw = input.value.trim();
+    if (!raw) { setError("Введите timestamp."); resultEl.innerHTML = ""; return; }
+    var num = Number(raw);
+    if (!Number.isFinite(num)) { setError("Это не похоже на число."); resultEl.innerHTML = ""; return; }
+
+    var unit = unitSelect.value;
+    if (unit === "auto") unit = Math.abs(num) >= 1e12 ? "ms" : "s";
+    var ms = unit === "ms" ? num : num * 1000;
+
+    var d = new Date(ms);
+    if (isNaN(d.getTime())) { setError("Не удалось преобразовать в дату."); resultEl.innerHTML = ""; return; }
+
+    setError("");
+    renderResult(resultEl, d);
+  });
+
+  document.getElementById("ts-use-now").addEventListener("click", function () {
+    input.value = Math.floor(Date.now() / 1000);
+    unitSelect.value = "s";
+    document.getElementById("ts-convert").click();
+  });
+
+  var dateInput = document.getElementById("ts-date-input");
+  var dateResult = document.getElementById("ts-date-result");
+
+  document.getElementById("ts-date-convert").addEventListener("click", function () {
+    if (!dateInput.value) { dateResult.innerHTML = ""; return; }
+    var d = new Date(dateInput.value);
+    if (isNaN(d.getTime())) { dateResult.innerHTML = ""; return; }
+    renderResult(dateResult, d);
+  });
+})();
+</script>
+
+</body>
+</html>
