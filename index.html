@@ -8,6 +8,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="style.css">
 <script src="covers.js" defer></script>
+<script src="enhance.js" defer></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
 <script type="application/ld+json">
 {
@@ -34,7 +35,7 @@
 <meta name="twitter:description" content="Практические статьи о программировании, инструментах разработчика и технологиях для тех, кто пишет код каждый день.">
 <meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/default.png">
 </head>
-<body>
+<body class="home">
 
 <header class="site-header">
   <div class="inner">
@@ -51,6 +52,8 @@
     <h1>Заметки о программировании и технологиях</h1>
     <p>Практические статьи для разработчиков: инструменты, языки, подходы к работе — без воды.</p>
   </section>
+
+  <div class="category-filter" id="category-filter"></div>
 
   <section class="post-list" id="post-list">
     <p style="color:var(--text-dim)">Загрузка статей…</p>
@@ -70,25 +73,58 @@
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
+let allPosts = [];
+
 fetch('posts.json')
   .then(r => r.json())
   .then(posts => {
     posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-    const list = document.getElementById('post-list');
-    list.innerHTML = posts.map(p => `
-      <a class="post-card" href="posts/${p.slug}.html">
-        <div class="cover cover--card" data-slug="${p.slug}" data-category="${p.category || ''}"></div>
-        <span class="badge" data-category="${p.category || ''}">${p.category || 'Статья'}</span>
-        <h2>${p.title}</h2>
-        <div class="post-meta">${formatDate(p.date)} · ${p.readTime} чтения</div>
-        <p class="post-excerpt">${p.excerpt}</p>
-      </a>
-    `).join('');
-    if (window.KodBlogCovers) window.KodBlogCovers.render(list);
+    allPosts = posts;
+    renderFilters(posts);
+    renderList(posts);
   })
   .catch(() => {
     document.getElementById('post-list').innerHTML = '<p>Не удалось загрузить статьи.</p>';
   });
+
+function renderFilters(posts) {
+  const bar = document.getElementById('category-filter');
+  const cats = [...new Set(posts.map(p => p.category).filter(Boolean))];
+  if (!cats.length) return;
+
+  bar.innerHTML = '<button class="chip is-active" type="button" data-cat="">Все</button>' +
+    cats.map(c => `<button class="chip" type="button" data-cat="${c}">${c}</button>`).join('');
+
+  bar.addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    bar.querySelectorAll('.chip').forEach(c => c.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    renderList(allPosts, btn.dataset.cat);
+  });
+}
+
+function renderList(posts, cat) {
+  const filtered = cat ? posts.filter(p => p.category === cat) : posts;
+  const list = document.getElementById('post-list');
+
+  if (!filtered.length) {
+    list.innerHTML = '<p style="color:var(--text-dim)">В этой категории пока нет статей.</p>';
+    return;
+  }
+
+  list.innerHTML = filtered.map((p, i) => `
+    <a class="post-card${i === 0 && !cat ? ' post-card--featured' : ''}" href="posts/${p.slug}.html">
+      <div class="cover cover--card" data-slug="${p.slug}" data-category="${p.category || ''}"></div>
+      <span class="badge" data-category="${p.category || ''}">${p.category || 'Статья'}</span>
+      <h2>${p.title}</h2>
+      <div class="post-meta">${formatDate(p.date)} · ${p.readTime} чтения</div>
+      <p class="post-excerpt">${p.excerpt}</p>
+    </a>
+  `).join('');
+  if (window.KodBlogCovers) window.KodBlogCovers.render(list);
+  if (window.KodBlogEnhance) window.KodBlogEnhance.reveal(list);
+}
 
 function formatDate(iso) {
   const d = new Date(iso);

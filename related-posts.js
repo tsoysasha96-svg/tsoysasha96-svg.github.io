@@ -21,6 +21,8 @@
           <h3>${p.title}</h3>
         </a>
       `).join('');
+      if (window.KodBlogCovers) window.KodBlogCovers.render(container);
+      if (window.KodBlogEnhance) window.KodBlogEnhance.reveal(container);
     })
     .catch(() => {});
 })();

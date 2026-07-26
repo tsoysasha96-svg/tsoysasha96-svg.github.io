@@ -48,6 +48,8 @@ window.KodBlogCovers = (function () {
     return PALETTES[hashStr(str) % PALETTES.length];
   }
 
+  var REDUCE_MOTION = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
   function buildSvg(slug, category, uid) {
     var h = hashStr(slug);
     var rand = mulberry32(h);
@@ -61,17 +63,41 @@ window.KodBlogCovers = (function () {
       var r = 24 + Math.floor(rand() * 100);
       var op = (0.07 + rand() * 0.14).toFixed(2);
       var kind = rand();
+
+      var driftTag = "";
+      if (!REDUCE_MOTION && i === 0) {
+        var dur = (11 + rand() * 6).toFixed(1);
+        var dx = (10 + rand() * 18).toFixed(0);
+        var dy = (8 + rand() * 14).toFixed(0);
+        driftTag =
+          '<animateTransform attributeName="transform" type="translate" additive="sum" ' +
+          'values="0,0; ' + dx + ',' + dy + '; 0,0" dur="' + dur + 's" repeatCount="indefinite" />';
+      }
+
       if (kind < 0.7) {
-        shapes += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#ffffff" opacity="' + op + '" />';
+        shapes += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#ffffff" opacity="' + op + '">' + driftTag + '</circle>';
       } else {
         var rot = Math.floor(rand() * 90);
         shapes +=
           '<rect x="' + (cx - r / 2) + '" y="' + (cy - r / 2) + '" width="' + r + '" height="' + r +
-          '" rx="' + (r * 0.2).toFixed(1) + '" fill="#ffffff" opacity="' + op + '" transform="rotate(' + rot + ' ' + cx + ' ' + cy + ')" />';
+          '" rx="' + (r * 0.2).toFixed(1) + '" fill="#ffffff" opacity="' + op + '" transform="rotate(' + rot + ' ' + cx + ' ' + cy + ')">' + driftTag + '</rect>';
       }
     }
 
     var iconPaths = ICONS[category] || DEFAULT_ICON;
+
+    var wx = 250 + Math.floor(rand() * 90);
+    var wy = 40 + Math.floor(rand() * 60);
+    var watermarkPulse = REDUCE_MOTION
+      ? ""
+      : '<animateTransform attributeName="transform" type="scale" additive="sum" ' +
+        'values="1;1.06;1" dur="' + (9 + rand() * 4).toFixed(1) + 's" repeatCount="indefinite" />';
+    var watermark =
+      '<g transform="translate(' + wx + ',' + wy + ') scale(4.2) translate(-12,-12)" opacity="0.14">' +
+      '<g stroke="#ffffff" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+      iconPaths + watermarkPulse +
+      "</g></g>";
+
     var iconBadge =
       '<g transform="translate(336,16)" opacity="0.9">' +
       '<circle cx="24" cy="24" r="24" fill="#000000" opacity="0.16" />' +
@@ -90,6 +116,7 @@ window.KodBlogCovers = (function () {
       "</linearGradient>" +
       "</defs>" +
       '<rect width="400" height="160" fill="url(#' + gid + ')" />' +
+      watermark +
       shapes +
       iconBadge +
       "</svg>"
