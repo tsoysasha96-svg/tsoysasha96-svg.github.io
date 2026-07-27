@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>MCP простыми словами: как AI-агенты получают доступ к инструментам и данным</title>
+    <link>https://tsoysasha96-svg.github.io/posts/mcp-prostymi-slovami.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/mcp-prostymi-slovami.html</guid>
+    <pubDate>Mon, 27 Jul 2026 10:00:00 +0000</pubDate>
+    <category>AI и агенты</category>
+    <description>Разбираемся, что такое Model Context Protocol, зачем он нужен AI-агентам и чем принципиально отличается от обычных API-интеграций и плагинов.</description>
+  </item>
+  <item>
     <title>Как вырасти из мидла в синьора: что меняется в работе, а не только в зарплате</title>
     <link>https://tsoysasha96-svg.github.io/posts/kak-rasti-iz-midla-v-seniora.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/kak-rasti-iz-midla-v-seniora.html</guid>
