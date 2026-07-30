@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>Git worktree: как работать над несколькими задачами одновременно без stash</title>
+    <link>https://tsoysasha96-svg.github.io/posts/git-worktree-kak-rabotat-nad-neskolkimi-zadachami.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/git-worktree-kak-rabotat-nad-neskolkimi-zadachami.html</guid>
+    <pubDate>Thu, 30 Jul 2026 10:00:00 +0000</pubDate>
+    <category>Инструменты</category>
+    <description>Постоянные stash и переключения веток мешают работать над несколькими задачами параллельно. Разбираемся, как git worktree решает эту проблему — и когда он действительно нужен.</description>
+  </item>
+  <item>
     <title>MCP простыми словами: как AI-агенты получают доступ к инструментам и данным</title>
     <link>https://tsoysasha96-svg.github.io/posts/mcp-prostymi-slovami.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/mcp-prostymi-slovami.html</guid>

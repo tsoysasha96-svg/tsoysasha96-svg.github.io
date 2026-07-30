@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git worktree: как работать над несколькими задачами одновременно без stash — КодБлог</title>
+<meta name="description" content="Разбираемся, как git worktree позволяет держать несколько веток проекта в разных папках одновременно — без stash, без пересборки и без риска перепутать контекст.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="../style.css">
+<script src="../covers.js" defer></script>
+<script src="../related-posts.js" defer></script>
+<script src="../enhance.js" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Git worktree: как работать над несколькими задачами одновременно без stash",
+  "description": "Разбираемся, как git worktree позволяет держать несколько веток проекта в разных папках одновременно — без stash, без пересборки и без риска перепутать контекст.",
+  "datePublished": "2026-07-30",
+  "dateModified": "2026-07-30",
+  "inLanguage": "ru",
+  "articleSection": "Инструменты",
+  "author": {
+    "@type": "Organization",
+    "name": "КодБлог"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "КодБлог",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tsoysasha96-svg.github.io/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tsoysasha96-svg.github.io/posts/git-worktree-kak-rabotat-nad-neskolkimi-zadachami.html"
+  }
+}
+</script>
+<link rel="alternate" type="application/rss+xml" title="КодБлог" href="/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="КодБлог">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Git worktree: несколько задач без stash">
+<meta property="og:description" content="Как git worktree позволяет работать над несколькими ветками одновременно без stash и путаницы с checkout.">
+<meta property="og:url" content="https://tsoysasha96-svg.github.io/posts/git-worktree-kak-rabotat-nad-neskolkimi-zadachami.html">
+<meta property="og:image" content="https://tsoysasha96-svg.github.io/og/git-worktree-kak-rabotat-nad-neskolkimi-zadachami.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:published_time" content="2026-07-30">
+<meta property="article:section" content="Инструменты">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Git worktree: несколько задач без stash">
+<meta name="twitter:description" content="Как git worktree позволяет работать над несколькими ветками одновременно без stash и путаницы с checkout.">
+<meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/git-worktree-kak-rabotat-nad-neskolkimi-zadachami.png">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/quiz.html">Quiz</a>
+      <a href="/tools.html">Инструменты</a>
+      <a href="/game.html">Игра</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <article class="post">
+    <div class="cover cover--hero" data-slug="git-worktree-kak-rabotat-nad-neskolkimi-zadachami" data-category="Инструменты"></div>
+    <span class="badge" data-category="Инструменты">Инструменты</span>
+    <h1>Git worktree: как работать над несколькими задачами одновременно без stash</h1>
+    <div class="post-meta">30 июля 2026 · 8 мин чтения</div>
+
+    <p>Знакомая ситуация: вы на середине фичи, ещё не готовой к коммиту, и тут прилетает срочный баг-фикс. Обычный путь — <code>git stash</code>, переключиться на нужную ветку, поправить баг, вернуться, сделать <code>git stash pop</code> и понадеяться, что ничего не потерялось и не конфликтует. Если проект собирается не мгновенно, к этому добавляется ещё и пересборка после каждого переключения. Git worktree решает эту проблему не процессом, а инструментом: вместо переключения контекста в одной папке вы получаете несколько папок с одним и тем же репозиторием.</p>
+
+    <h2>Что такое worktree на самом деле</h2>
+    <p>По умолчанию у репозитория git есть один рабочий каталог (worktree) — папка, куда извлечено содержимое текущей ветки, и один специальный каталог <code>.git</code> с историей, объектами и настройками. Команда <code>git worktree add</code> не клонирует репозиторий заново — она создаёт ещё одну рабочую папку, которая ссылается на тот же <code>.git</code>, но извлекает в себя отдельную ветку. История, объекты, настройки remote — всё общее и хранится один раз. Разными остаются только файлы на диске и то, какая ветка сейчас в них извлечена.</p>
+    <p>Из этого следует главное практическое ограничение: одну и ту же ветку нельзя одновременно извлечь в двух worktree — git специально это запрещает, чтобы не было двух копий, которые независимо друг от друга редактируют одну и ту же ветку и потом конфликтуют между собой при коммите.</p>
+
+    <h2>Как создать и убрать worktree</h2>
+    <p>Базовый сценарий — три команды. Сначала смотрим, что уже есть:</p>
+    <pre><code>git worktree list</code></pre>
+    <p>Дальше создаём новую рабочую папку под конкретную задачу — например, для срочного багфикса, пока основная папка занята незакоммиченной фичей:</p>
+    <pre><code>git worktree add ../myproject-hotfix hotfix/urgent-bug</code></pre>
+    <p>Эта команда создаст соседнюю папку <code>myproject-hotfix</code>, извлечёт туда ветку <code>hotfix/urgent-bug</code> (если её ещё нет — можно сразу добавить флаг <code>-b</code>, чтобы создать новую ветку от текущего <code>HEAD</code>) и подключит её к тому же репозиторию. Дальше это обычная папка: можно открыть в редакторе, запустить тесты, собрать проект отдельно от основной рабочей копии.</p>
+    <p>Когда задача закрыта, worktree убирается так же просто:</p>
+    <pre><code>git worktree remove ../myproject-hotfix</code></pre>
+    <p>Если папку удалили руками, а git всё ещё думает, что worktree существует, поможет <code>git worktree prune</code> — она уберёт из внутреннего списка ссылки на каталоги, которых больше нет на диске.</p>
+
+    <h2>Где это реально экономит время</h2>
+    <ul>
+      <li><strong>Срочные фиксы посреди фичи.</strong> Не нужно stash'ить незакоммиченные изменения и держать в голове, что именно там лежит — фича остаётся нетронутой в своей папке.</li>
+      <li><strong>Параллельный код-ревью.</strong> Можно извлечь чужой PR в отдельный worktree, погонять его локально, не трогая свою текущую рабочую копию и не теряя незакоммиченный прогресс.</li>
+      <li><strong>Долгие тесты или сборки в фоне.</strong> Пока в одной папке крутится долгий прогон тестов на одной ветке, в другой можно спокойно продолжать писать код на другой — без ожидания и без риска зацепить те же файлы.</li>
+      <li><strong>Сравнение поведения двух версий.</strong> Например, старой и новой ветки одного и того же сервиса, запущенных бок о бок, чтобы визуально сверить разницу в поведении.</li>
+    </ul>
+
+    <blockquote>Worktree не заменяет ветки — он даёт каждой активной задаче собственное место на диске, чтобы переключение контекста не превращалось в ритуал со stash и надеждой, что ничего не потерялось.</blockquote>
+
+    <h2>На что обратить внимание</h2>
+    <p>У подхода есть свои нюансы, которые стоит знать заранее, а не выяснять на практике в неудобный момент.</p>
+    <p>Во-первых, каждый worktree — это полноценная копия файлов на диске, а не облегчённая ссылка: если проект тяжёлый или в нём много зависимостей вроде <code>node_modules</code>, несколько worktree начнут заметно есть место на диске. Их придётся либо переустанавливать в каждой папке отдельно, либо выносить в общее место через инструменты уровня выше git.</p>
+    <p>Во-вторых, не стоит заводить worktree «про запас» на каждую мелкую задачу — если рабочих копий становится больше пяти-шести, начинает теряться смысл: вы снова тратите время, но уже на то, чтобы вспомнить, в какой из папок что происходит. Практический ориентир — держать worktree под каждую реально параллельную задачу, а не под каждую ветку, которая теоретически может понадобиться.</p>
+    <p>В-третьих, worktree — это фича самого git, а не конкретного хостинга или клиента, поэтому она одинаково доступна из терминала, но не всегда одинаково удобно показана в GUI-клиентах и интегрированных средах разработки — стоит один раз проверить, как ваш редактор отображает несколько worktree одного репозитория, прежде чем полагаться на этот рабочий процесс постоянно.</p>
+    <p>В сумме git worktree — не замена веткам и не замена stash полностью, а дополнительный инструмент для конкретной проблемы: параллельной работы над несколькими задачами в одном репозитории без постоянного переключения контекста в одной и той же папке. Если вы регулярно ловите себя на цепочке «stash → checkout → работа → checkout обратно → stash pop», это ровно тот случай, когда стоит один раз настроить worktree и забыть про эту рутину.</p>
+
+    <div class="related-posts" id="related-posts"></div>
+
+    <a class="back-link" href="/">← Все статьи</a>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+    <a href="https://t.me/kodblog_dev" target="_blank" rel="noopener">Telegram</a>
+  </div>
+</footer>
+
+<div class="love-note">Я люблю Алину Цой (Билялову)</div>
+
+</body>
+</html>
