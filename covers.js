@@ -25,6 +25,52 @@ window.KodBlogCovers = (function () {
   };
   var DEFAULT_ICON = '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>';
 
+  // Цвета "токенов" — та же палитра, что в подсветке кода на видео (VS Code Dark+),
+  // чтобы обложка сайта и код-карточка в Shorts выглядели одной семьёй.
+  var SEG_COLORS = ["#e6e8eb", "#e6e8eb", "#c586c0", "#dcdcaa", "#ce9178", "#6a9955", "#b5cea8"];
+
+  function buildCodeWindow(rand) {
+    var x0 = 24, y0 = 24, w = 300, h = 112, rx = 14;
+    var lineY = y0 + 44;
+    var lineH = 18;
+    var numLines = 4;
+    var lines = "";
+    var lastX = x0 + 20, lastY = y0 + 30;
+
+    for (var li = 0; li < numLines; li++) {
+      var curX = x0 + 20 + (li % 3 === 2 ? 16 : 0);
+      var segCount = 2 + Math.floor(rand() * 2);
+      for (var s = 0; s < segCount; s++) {
+        var segW = 16 + Math.floor(rand() * 42);
+        var color = SEG_COLORS[Math.floor(rand() * SEG_COLORS.length)];
+        var op = s === 0 ? 0.9 : 0.62;
+        lines +=
+          '<rect x="' + curX + '" y="' + (lineY - 9) + '" width="' + segW + '" height="8" rx="3" ' +
+          'fill="' + color + '" opacity="' + op.toFixed(2) + '"/>';
+        curX += segW + 7;
+      }
+      lastX = curX;
+      lastY = lineY;
+      lineY += lineH;
+    }
+
+    var cursor = REDUCE_MOTION
+      ? '<rect x="' + lastX + '" y="' + (lastY - 9) + '" width="3" height="9" fill="#e6e8eb" opacity="0.8"/>'
+      : '<rect x="' + lastX + '" y="' + (lastY - 9) + '" width="3" height="9" fill="#e6e8eb">' +
+        '<animate attributeName="opacity" values="0.9;0;0.9" dur="1s" repeatCount="indefinite"/></rect>';
+
+    return (
+      '<g>' +
+      '<rect x="' + (x0 + 5) + '" y="' + (y0 + 6) + '" width="' + w + '" height="' + h + '" rx="' + rx + '" fill="#000000" opacity="0.18"/>' +
+      '<rect x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="' + h + '" rx="' + rx + '" fill="#12141c" opacity="0.72" stroke="#ffffff" stroke-opacity="0.1"/>' +
+      '<circle cx="' + (x0 + 18) + '" cy="' + (y0 + 16) + '" r="4" fill="#ef6a5e"/>' +
+      '<circle cx="' + (x0 + 32) + '" cy="' + (y0 + 16) + '" r="4" fill="#f5bf4f"/>' +
+      '<circle cx="' + (x0 + 46) + '" cy="' + (y0 + 16) + '" r="4" fill="#61c554"/>' +
+      lines + cursor +
+      '</g>'
+    );
+  }
+
   function hashStr(str) {
     var h = 0;
     for (var i = 0; i < str.length; i++) {
@@ -106,6 +152,8 @@ window.KodBlogCovers = (function () {
       "</g>" +
       "</g>";
 
+    var codeWindow = buildCodeWindow(rand);
+
     var gid = "grad-" + uid;
     return (
       '<svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" role="img" aria-hidden="true">' +
@@ -118,6 +166,7 @@ window.KodBlogCovers = (function () {
       '<rect width="400" height="160" fill="url(#' + gid + ')" />' +
       watermark +
       shapes +
+      codeWindow +
       iconBadge +
       "</svg>"
     );
