@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>Замыкания в JavaScript: как они работают и зачем нужны на практике</title>
+    <link>https://tsoysasha96-svg.github.io/posts/zamykaniya-v-javascript-kak-oni-rabotayut.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/zamykaniya-v-javascript-kak-oni-rabotayut.html</guid>
+    <pubDate>Fri, 31 Jul 2026 10:00:00 +0000</pubDate>
+    <category>Языки программирования</category>
+    <description>Замыкания часто объясняют через академические примеры, которые тут же забываются. Разбираемся, как они устроены на самом деле, зачем нужны в реальном коде и какая ловушка ждёт в циклах.</description>
+  </item>
+  <item>
     <title>Git worktree: как работать над несколькими задачами одновременно без stash</title>
     <link>https://tsoysasha96-svg.github.io/posts/git-worktree-kak-rabotat-nad-neskolkimi-zadachami.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/git-worktree-kak-rabotat-nad-neskolkimi-zadachami.html</guid>

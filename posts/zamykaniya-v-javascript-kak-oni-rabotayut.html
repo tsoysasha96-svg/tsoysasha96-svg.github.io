@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Замыкания в JavaScript: как они работают и зачем нужны на практике — КодБлог</title>
+<meta name="description" content="Замыкания часто объясняют через академические примеры, которые тут же забываются. Разбираемся, как замыкания устроены на самом деле, зачем они нужны в реальном коде и какая ловушка подстерегает в циклах.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="../style.css">
+<script src="../covers.js" defer></script>
+<script src="../related-posts.js" defer></script>
+<script src="../enhance.js" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Замыкания в JavaScript: как они работают и зачем нужны на практике",
+  "description": "Замыкания часто объясняют через академические примеры, которые тут же забываются. Разбираемся, как замыкания устроены на самом деле, зачем они нужны в реальном коде и какая ловушка подстерегает в циклах.",
+  "datePublished": "2026-07-31",
+  "dateModified": "2026-07-31",
+  "inLanguage": "ru",
+  "articleSection": "Языки программирования",
+  "author": {
+    "@type": "Organization",
+    "name": "КодБлог"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "КодБлог",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tsoysasha96-svg.github.io/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tsoysasha96-svg.github.io/posts/zamykaniya-v-javascript-kak-oni-rabotayut.html"
+  }
+}
+</script>
+<link rel="alternate" type="application/rss+xml" title="КодБлог" href="/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="КодБлог">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Замыкания в JavaScript простыми словами">
+<meta property="og:description" content="Как замыкания устроены на самом деле, зачем нужны в реальном коде и какая ловушка ждёт в циклах.">
+<meta property="og:url" content="https://tsoysasha96-svg.github.io/posts/zamykaniya-v-javascript-kak-oni-rabotayut.html">
+<meta property="og:image" content="https://tsoysasha96-svg.github.io/og/zamykaniya-v-javascript-kak-oni-rabotayut.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:published_time" content="2026-07-31">
+<meta property="article:section" content="Языки программирования">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Замыкания в JavaScript простыми словами">
+<meta name="twitter:description" content="Как замыкания устроены на самом деле, зачем нужны в реальном коде и какая ловушка ждёт в циклах.">
+<meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/zamykaniya-v-javascript-kak-oni-rabotayut.png">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/quiz.html">Quiz</a>
+      <a href="/tools.html">Инструменты</a>
+      <a href="/game.html">Игра</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <article class="post">
+    <div class="cover cover--hero" data-slug="zamykaniya-v-javascript-kak-oni-rabotayut" data-category="Языки программирования"></div>
+    <span class="badge" data-category="Языки программирования">Языки программирования</span>
+    <h1>Замыкания в JavaScript: как они работают и зачем нужны на практике</h1>
+    <div class="post-meta">31 июля 2026 · 8 мин чтения</div>
+
+    <p>«Замыкание — это функция вместе с окружением, в котором она была создана» — большинство разработчиков хотя бы раз слышали это определение на собеседовании, кивали и тут же забывали, потому что оно не объясняет, зачем это вообще нужно в реальном коде. Проблема в том, что замыкания обычно показывают на искусственных примерах вроде счётчика, который никто никогда не пишет в продакшене. На деле замыкания — это не отдельная фича, которую можно «использовать» или «не использовать», а естественное следствие того, как в JavaScript устроены функции и области видимости. Вы уже пользуетесь ими каждый день, даже если не называете это слово вслух. Разберёмся, что это такое без магии, и где это реально имеет значение.</p>
+
+    <h2>Что такое замыкание на самом деле</h2>
+    <p>Когда функция создаётся внутри другой функции, она получает доступ не только к своим собственным переменным, но и к переменным из внешней функции — и этот доступ сохраняется даже после того, как внешняя функция уже завершила выполнение. Вот минимальный пример:</p>
+    <pre><code>function createCounter() {
+  let count = 0;
+  return function () {
+    count += 1;
+    return count;
+  };
+}
+
+const counter = createCounter();
+counter(); // 1
+counter(); // 2</code></pre>
+    <p>К моменту второго вызова <code>counter()</code> функция <code>createCounter</code> давно вернула управление, и по логике обычного стекового вызова переменная <code>count</code> должна была исчезнуть вместе с её локальной областью видимости. Но она не исчезает — потому что внутренняя функция «замкнула» на себе ссылку на эту переменную, и движок JavaScript держит её в памяти, пока жива хоть одна функция, которая может к ней обратиться. Это и есть замыкание: не копия значения, а живая ссылка на конкретную переменную в конкретной области видимости.</p>
+
+    <h2>Где замыкания реально нужны в коде</h2>
+    <p>Как только заменить абстрактный «счётчик» на реальные задачи, становится видно, что замыкания — это рабочая лошадка, а не теоретическая конструкция:</p>
+    <ul>
+      <li><strong>Приватное состояние без классов.</strong> Переменная, объявленная внутри функции, недоступна снаружи напрямую — к ней можно обратиться только через функции, которые возвращает создающая функция. Это простой способ получить инкапсуляцию там, где полноценный класс избыточен.</li>
+      <li><strong>Debounce и throttle.</strong> Функции вроде debounce для поля поиска хранят в замыкании таймер и время последнего вызова между отдельными срабатываниями обработчика событий — без этого пришлось бы городить состояние снаружи.</li>
+      <li><strong>Мемоизация.</strong> Кэш результатов вычислений обычно живёт в объекте или Map, захваченном замыканием, и переживает между вызовами обёрнутой функции, оставаясь недоступным для остального кода.</li>
+      <li><strong>Фабрики функций с параметрами.</strong> Функция, которая принимает конфигурацию и возвращает другую, уже настроенную под неё функцию — частый паттерн в middleware Express, обработчиках событий с дополнительным контекстом, генераторах валидаторов.</li>
+    </ul>
+    <p>Во всех этих случаях замыкание — не самоцель, а побочный эффект того, что вам нужно состояние, которое живёт дольше одного вызова функции, но не должно быть видно снаружи.</p>
+
+    <h2>Частая ловушка: замыкания внутри циклов</h2>
+    <p>Самый известный баг, связанный с замыканиями, возникает в циклах, когда для переменной цикла используется <code>var</code>:</p>
+    <pre><code>for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 0);
+}
+// выведет: 3, 3, 3</code></pre>
+    <p>Причина в том, что <code>var</code> не создаёт отдельную переменную на каждую итерацию — она одна на весь цикл, и все три замыкания ссылаются на одну и ту же ячейку памяти. К моменту, когда сработает первый <code>setTimeout</code>, цикл уже закончился, и <code>i</code> равно 3. Замена <code>var</code> на <code>let</code> решает проблему, потому что <code>let</code> создаёт новую привязку переменной на каждую итерацию цикла — и каждое замыкание получает собственную, независимую копию:</p>
+    <pre><code>for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 0);
+}
+// выведет: 0, 1, 2</code></pre>
+
+    <blockquote>Замыкание — это не отдельный синтаксис, который нужно специально применять, а естественное поведение функций в JavaScript. Понимать его стоит не для того, чтобы «использовать замыкания», а чтобы не удивляться, когда переменная из внешней функции внезапно оказывается общей на несколько вызовов сразу.</blockquote>
+
+    <h2>На что обратить внимание</h2>
+    <p>У замыканий есть и обратная сторона, о которой реже говорят. Раз замкнутая переменная держится в памяти, пока жива хотя бы одна ссылающаяся на неё функция, долгоживущие замыкания на большие объекты — например, DOM-узлы или большие массивы, случайно захваченные вместе с нужной переменной, — могут мешать сборщику мусора освободить память вовремя. Обычно это не проблема в коротких обработчиках, но становится заметно в длинных сессиях одностраничных приложений, где обработчики событий накапливаются, а старые версии данных никто явно не отписывает.</p>
+    <p>Практический ориентир простой: если функция возвращает или сохраняет другую функцию, стоит на секунду задуматься, какие переменные из внешней области видимости она на самом деле «утаскивает» с собой, и не тянется ли туда что-то тяжелее, чем нужно.</p>
+
+    <div class="related-posts" id="related-posts"></div>
+
+    <a class="back-link" href="/">← Все статьи</a>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+    <a href="https://t.me/kodblog_dev" target="_blank" rel="noopener">Telegram</a>
+  </div>
+</footer>
+
+<div class="love-note">Я люблю Алину Цой (Билялову)</div>
+
+</body>
+</html>
