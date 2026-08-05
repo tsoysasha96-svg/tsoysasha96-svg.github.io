@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>N+1 проблема запросов: почему ORM незаметно убивает производительность</title>
+    <link>https://tsoysasha96-svg.github.io/posts/n-plus-1-problema-zaprosov-k-baze-dannyh.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/n-plus-1-problema-zaprosov-k-baze-dannyh.html</guid>
+    <pubDate>Wed, 05 Aug 2026 10:00:00 +0000</pubDate>
+    <category>Базы данных</category>
+    <description>ORM позволяет забыть про SQL, но именно это удобство часто прячет N+1 проблему — сотни лишних запросов к базе там, где хватило бы одного. Разбираемся, как она возникает, почему её не видно в разработке, и как её находить и решать на практике.</description>
+  </item>
+  <item>
     <title>Big O нотация простыми словами: как оценивать сложность алгоритмов</title>
     <link>https://tsoysasha96-svg.github.io/posts/big-o-notatsiya-prostymi-slovami.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/big-o-notatsiya-prostymi-slovami.html</guid>
