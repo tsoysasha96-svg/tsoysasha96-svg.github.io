@@ -172,15 +172,26 @@ window.KodBlogCovers = (function () {
     );
   }
 
+  function renderFallback(el, i) {
+    el.innerHTML = buildSvg(el.dataset.slug, el.dataset.category || "", el.dataset.slug + "-" + i);
+    el.dataset.rendered = "1";
+  }
+
   function render(root) {
     var scope = root || document;
 
     var covers = scope.querySelectorAll(".cover[data-slug]");
     for (var i = 0; i < covers.length; i++) {
-      var el = covers[i];
-      if (el.dataset.rendered) continue;
-      el.innerHTML = buildSvg(el.dataset.slug, el.dataset.category || "", el.dataset.slug + "-" + i);
-      el.dataset.rendered = "1";
+      (function (el, i) {
+        if (el.dataset.rendered) return;
+        el.dataset.rendered = "1";
+
+        var img = document.createElement("img");
+        img.alt = "";
+        img.onerror = function () { renderFallback(el, i); };
+        img.src = "/covers/" + el.dataset.slug + ".jpg";
+        el.appendChild(img);
+      })(covers[i], i);
     }
 
     var badges = scope.querySelectorAll(".badge[data-category]");

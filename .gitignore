@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+
+# Secret — same free Pexels API key as the kodblog-shorts video pipeline
+pexels_key.txt
