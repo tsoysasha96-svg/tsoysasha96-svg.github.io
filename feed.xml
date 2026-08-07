@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>HTTP-кэширование простыми словами: Cache-Control, ETag и почему сайт не обновляется</title>
+    <link>https://tsoysasha96-svg.github.io/posts/http-keshirovanie-cache-control-i-etag.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/http-keshirovanie-cache-control-i-etag.html</guid>
+    <pubDate>Fri, 07 Aug 2026 10:00:00 +0000</pubDate>
+    <category>Веб-разработка</category>
+    <description>Разбираемся, как браузер решает, что взять из кэша, а что перезапросить: что на самом деле значит no-cache, зачем нужен ETag и почему после деплоя пользователи иногда видят старую версию сайта.</description>
+  </item>
+  <item>
     <title>N+1 проблема запросов: почему ORM незаметно убивает производительность</title>
     <link>https://tsoysasha96-svg.github.io/posts/n-plus-1-problema-zaprosov-k-baze-dannyh.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/n-plus-1-problema-zaprosov-k-baze-dannyh.html</guid>
