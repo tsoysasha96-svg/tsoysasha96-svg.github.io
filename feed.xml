@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>Оценка сроков в разработке: почему конкретные цифры почти всегда врут</title>
+    <link>https://tsoysasha96-svg.github.io/posts/otsenka-srokov-v-razrabotke-pochemu-konkretnye-cifry-vrut.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/otsenka-srokov-v-razrabotke-pochemu-konkretnye-cifry-vrut.html</guid>
+    <pubDate>Mon, 10 Aug 2026 10:00:00 +0000</pubDate>
+    <category>Продуктивность</category>
+    <description>Оценка «три дня» почти никогда не сбывается — и дело не в лени разработчика. Разбираемся, откуда берётся систематическое занижение сроков и как оценивать задачи так, чтобы срокам можно было доверять.</description>
+  </item>
+  <item>
     <title>HTTP-кэширование простыми словами: Cache-Control, ETag и почему сайт не обновляется</title>
     <link>https://tsoysasha96-svg.github.io/posts/http-keshirovanie-cache-control-i-etag.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/http-keshirovanie-cache-control-i-etag.html</guid>
