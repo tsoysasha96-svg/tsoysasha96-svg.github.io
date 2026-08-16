@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>RAG простыми словами: как AI отвечает по вашим документам, а не угадывает</title>
+    <link>https://tsoysasha96-svg.github.io/posts/rag-prostymi-slovami.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/rag-prostymi-slovami.html</guid>
+    <pubDate>Sun, 16 Aug 2026 10:00:00 +0000</pubDate>
+    <category>AI и агенты</category>
+    <description>Разбираемся, что такое Retrieval-Augmented Generation, зачем он нужен AI-агентам и чем принципиально отличается от простого «засовывания текста в промпт» и дообучения модели.</description>
+  </item>
+  <item>
     <title>Технические собеседования разработчиков: что на самом деле проверяют</title>
     <link>https://tsoysasha96-svg.github.io/posts/tehnicheskie-sobesedovaniya-razrabotchikov.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/tehnicheskie-sobesedovaniya-razrabotchikov.html</guid>
