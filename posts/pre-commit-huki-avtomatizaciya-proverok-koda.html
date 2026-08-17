@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pre-commit хуки: как ловить проблемы в коде до коммита, а не после — КодБлог</title>
+<meta name="description" content="Разбираемся, как устроены git-хуки и pre-commit framework, какие проверки стоит запускать до коммита, а какие — нет, и почему медленные хуки в итоге просто обходят.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="../style.css">
+<script src="../covers.js" defer></script>
+<script src="../related-posts.js" defer></script>
+<script src="../enhance.js" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pre-commit хуки: как ловить проблемы в коде до коммита, а не после",
+  "description": "Разбираемся, как устроены git-хуки и pre-commit framework, какие проверки стоит запускать до коммита, а какие — нет, и почему медленные хуки в итоге просто обходят.",
+  "datePublished": "2026-08-17",
+  "dateModified": "2026-08-17",
+  "inLanguage": "ru",
+  "articleSection": "Инструменты",
+  "author": {
+    "@type": "Organization",
+    "name": "КодБлог"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "КодБлог",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tsoysasha96-svg.github.io/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tsoysasha96-svg.github.io/posts/pre-commit-huki-avtomatizaciya-proverok-koda.html"
+  }
+}
+</script>
+<link rel="alternate" type="application/rss+xml" title="КодБлог" href="/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="КодБлог">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Pre-commit хуки: проверки кода до коммита">
+<meta property="og:description" content="Как git-хуки и pre-commit framework ловят проблемы в коде до коммита, а не после ревью или в CI.">
+<meta property="og:url" content="https://tsoysasha96-svg.github.io/posts/pre-commit-huki-avtomatizaciya-proverok-koda.html">
+<meta property="og:image" content="https://tsoysasha96-svg.github.io/og/pre-commit-huki-avtomatizaciya-proverok-koda.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:published_time" content="2026-08-17">
+<meta property="article:section" content="Инструменты">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pre-commit хуки: проверки кода до коммита">
+<meta name="twitter:description" content="Как git-хуки и pre-commit framework ловят проблемы в коде до коммита, а не после ревью или в CI.">
+<meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/pre-commit-huki-avtomatizaciya-proverok-koda.png">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/quiz.html">Quiz</a>
+      <a href="/tools.html">Инструменты</a>
+      <a href="/game.html">Игра</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <article class="post">
+    <div class="cover cover--hero" data-slug="pre-commit-huki-avtomatizaciya-proverok-koda" data-category="Инструменты"></div>
+    <span class="badge" data-category="Инструменты">Инструменты</span>
+    <h1>Pre-commit хуки: как ловить проблемы в коде до коммита, а не после</h1>
+    <div class="post-meta">17 августа 2026 · 8 мин чтения</div>
+
+    <p>Знакомая цепочка: коммит запушен, CI зажёг красный крест из-за забытого <code>console.log</code> или несоответствия форматированию, ревьюер оставил комментарий «поправь линтер» вместо того, чтобы обсуждать логику. Каждая такая мелочь по отдельности — секундное дело, но пройдя через пуш, ожидание CI и раунд ревью, она превращается в минуты и часы простоя. Pre-commit хуки решают это не дисциплиной «не забывай проверять», а тем, что просто не дают закоммитить код, который явно нарушает правила — раньше, чем он вообще покинет вашу машину.</p>
+
+    <h2>Что такое git-хук на самом деле</h2>
+    <p>У каждого git-репозитория есть скрытая папка <code>.git/hooks</code> — в ней лежат скрипты-заглушки для разных событий жизненного цикла коммита: <code>pre-commit</code> запускается перед созданием коммита, <code>commit-msg</code> — после того как вы ввели сообщение, но до его сохранения, <code>pre-push</code> — перед отправкой на удалённый репозиторий. Если сделать файл <code>.git/hooks/pre-commit</code> исполняемым и вернуть из него ненулевой код завершения, git просто остановит коммит и покажет вывод скрипта. Это встроенный, ничем не зависимый механизм — он есть в любом git-репозитории без единой внешней библиотеки.</p>
+    <p>Проблема в том, что папка <code>.git</code> не попадает в репозиторий — она локальная для каждой копии проекта. Значит, хук, добавленный руками, не доедет до остальной команды: каждый разработчик должен будет создать его у себя сам, и рано или поздно кто-то этого не сделает. Именно эту проблему решают фреймворки для хуков поверх голого git.</p>
+
+    <h2>Framework поверх git-хуков</h2>
+    <p>Самый распространённый универсальный вариант — Python-инструмент <code>pre-commit</code>, который работает с любым языком проекта, не только с Python. Идея простая: конфигурация хуков хранится в файле <code>.pre-commit-config.yaml</code> прямо в репозитории, а сам инструмент при установке (<code>pre-commit install</code>) кладёт в <code>.git/hooks/pre-commit</code> тонкий скрипт, который читает этот файл и запускает перечисленные проверки.</p>
+    <pre><code>repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0
+    hooks:
+      - id: ruff</code></pre>
+    <p>Для JavaScript/TypeScript-проектов похожую роль чаще играет связка <code>husky</code> + <code>lint-staged</code>: husky отвечает за сам факт запуска хука, а lint-staged сужает проверку только до файлов, которые реально попали в коммит, а не гоняет линтер по всему репозиторию. Разница в экосистеме, но принцип общий: конфиг лежит в репозитории и коммитится вместе с кодом, поэтому у всей команды хуки настраиваются одной командой установки, а не вручную у каждого.</p>
+
+    <h2>Какие проверки туда стоит класть, а какие — нет</h2>
+    <p>Соблазн — засунуть в pre-commit всё, что только можно проверить. На практике это быстро убивает саму идею: если хук перед каждым коммитом занимает минуту-две, разработчики начнут коммитить реже и крупнее, а потом искать способ обойти проверку. Разумная граница проходит по скорости и детерминированности:</p>
+    <ul>
+      <li><strong>Форматирование</strong> (Prettier, Black, gofmt) — почти мгновенно, не требует сети, безопасно автоисправлять прямо в хуке.</li>
+      <li><strong>Линтинг изменённых файлов</strong> (ESLint, Ruff, golangci-lint) — быстро, если ограничить область только staged-файлами, а не всем проектом.</li>
+      <li><strong>Проверка на утечку секретов</strong> (detect-secrets, gitleaks) — дешёвая и особенно ценная проверка: попавший в историю ключ API потом почти невозможно полностью вычистить, легче не пустить его в коммит вообще.</li>
+      <li><strong>Валидация формата коммит-сообщения</strong> (commitlint и подобные) — если команда полагается на conventional commits для автогенерации changelog.</li>
+    </ul>
+    <p>А вот полный прогон тестов, сборка проекта или проверки, которые ходят в сеть или в базу данных, в pre-commit обычно не место — для них лучше подходит <code>pre-push</code> хук (коммитить всё равно приходится часто, а пушить — реже) или, ещё правильнее, CI, где долгая проверка никого не блокирует локально.</p>
+
+    <blockquote>Хук, который выполняется дольше пары секунд, довольно быстро перестаёт быть проверкой и становится источником <code>git commit --no-verify</code> в мышечной памяти команды — а обойти можно и то, что действительно стоило бы поймать.</blockquote>
+
+    <h2>Типичные грабли на практике</h2>
+    <p>Первая и самая частая проблема — именно обход через флаг <code>--no-verify</code>. Технически он должен быть аварийным люком для редких ситуаций, но если хуки медленные или слишком капризные, он превращается в привычку, и вся система проверок молча перестаёт работать для части коммитов. Лечится это не запретом флага (git не даёт его убрать), а тем, чтобы хуки оставались быстрыми и редко ложно-положительными — тогда обходить их просто не хочется.</p>
+    <p>Вторая — расхождение локальной и CI-конфигурации: если pre-commit проверяет одно, а CI-пайплайн — немного другое (другая версия линтера, другие правила), разработчик получает зелёный хук локально и красный CI на сервере, что подрывает доверие к самой идее локальных проверок. Стоит держать одну и ту же конфигурацию и версии инструментов в обоих местах, а CI использовать как финальный контроль, а не как источник новых правил.</p>
+    <p>Третья — установка хуков не автоматизирована. Если <code>pre-commit install</code> или <code>npx husky install</code> нужно помнить запустить руками после клонирования репозитория, часть команды просто забудет это сделать. Практичное решение — привязать установку к обычному шагу настройки проекта, например к <code>npm install</code> через <code>prepare</code>-скрипт в <code>package.json</code>, чтобы хуки появлялись сами собой, без отдельного шага, который легко пропустить.</p>
+    <p>В сумме pre-commit хуки — не замена код-ревью и не замена CI, а более дешёвый и быстрый первый рубеж: они ловят механические проблемы там, где это стоит секунды, а не минуты ожидания сборки и не время ревьюера. Если в проекте регулярно повторяются одни и те же комментарии в ревью про форматирование или забытые отладочные строки — это ровно тот сигнал, что пора автоматизировать эту часть, а не полагаться на память каждого разработчика.</p>
+
+    <div class="related-posts" id="related-posts"></div>
+
+    <a class="back-link" href="/">← Все статьи</a>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+    <a href="https://t.me/kodblog_dev" target="_blank" rel="noopener">Telegram</a>
+  </div>
+</footer>
+
+<div class="love-note">Я люблю Алину Цой (Билялову)</div>
+
+</body>
+</html>
