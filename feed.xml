@@ -8,6 +8,14 @@
   <description>Практические статьи о программировании, инструментах разработчика и технологиях.</description>
   <language>ru</language>
   <item>
+    <title>Event loop в JavaScript простыми словами: как работает асинхронность</title>
+    <link>https://tsoysasha96-svg.github.io/posts/event-loop-v-javascript-prostymi-slovami.html</link>
+    <guid>https://tsoysasha96-svg.github.io/posts/event-loop-v-javascript-prostymi-slovami.html</guid>
+    <pubDate>Wed, 19 Aug 2026 10:00:00 +0000</pubDate>
+    <category>Языки программирования</category>
+    <description>Разбираемся, как устроены call stack, очередь задач и очередь микрозадач в JavaScript, почему setTimeout(fn, 0) не выполняется мгновенно и что случится раньше — промис или таймер.</description>
+  </item>
+  <item>
     <title>Pre-commit хуки: как ловить проблемы в коде до коммита, а не после</title>
     <link>https://tsoysasha96-svg.github.io/posts/pre-commit-huki-avtomatizaciya-proverok-koda.html</link>
     <guid>https://tsoysasha96-svg.github.io/posts/pre-commit-huki-avtomatizaciya-proverok-koda.html</guid>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Event loop в JavaScript простыми словами: как работает асинхронность — КодБлог</title>
+<meta name="description" content="Разбираемся, как устроены call stack, очередь задач и очередь микрозадач в JavaScript, почему setTimeout(fn, 0) не выполняется мгновенно и что случится раньше — промис или таймер.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="../style.css">
+<script src="../covers.js" defer></script>
+<script src="../related-posts.js" defer></script>
+<script src="../enhance.js" defer></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6965581425781569" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Event loop в JavaScript простыми словами: как работает асинхронность",
+  "description": "Разбираемся, как устроены call stack, очередь задач и очередь микрозадач в JavaScript, почему setTimeout(fn, 0) не выполняется мгновенно и что случится раньше — промис или таймер.",
+  "datePublished": "2026-08-19",
+  "dateModified": "2026-08-19",
+  "inLanguage": "ru",
+  "articleSection": "Языки программирования",
+  "author": {
+    "@type": "Organization",
+    "name": "КодБлог"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "КодБлог",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://tsoysasha96-svg.github.io/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://tsoysasha96-svg.github.io/posts/event-loop-v-javascript-prostymi-slovami.html"
+  }
+}
+</script>
+<link rel="alternate" type="application/rss+xml" title="КодБлог" href="/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="КодБлог">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Event loop в JavaScript простыми словами">
+<meta property="og:description" content="Почему setTimeout(fn, 0) не выполняется мгновенно и что случится раньше — промис или таймер.">
+<meta property="og:url" content="https://tsoysasha96-svg.github.io/posts/event-loop-v-javascript-prostymi-slovami.html">
+<meta property="og:image" content="https://tsoysasha96-svg.github.io/og/event-loop-v-javascript-prostymi-slovami.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:published_time" content="2026-08-19">
+<meta property="article:section" content="Языки программирования">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Event loop в JavaScript простыми словами">
+<meta name="twitter:description" content="Почему setTimeout(fn, 0) не выполняется мгновенно и что случится раньше — промис или таймер.">
+<meta name="twitter:image" content="https://tsoysasha96-svg.github.io/og/event-loop-v-javascript-prostymi-slovami.png">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="/">КодБлог</a>
+    <nav>
+      <a href="/quiz.html">Quiz</a>
+      <a href="/tools.html">Инструменты</a>
+      <a href="/game.html">Игра</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <article class="post">
+    <div class="cover cover--hero" data-slug="event-loop-v-javascript-prostymi-slovami" data-category="Языки программирования"></div>
+    <span class="badge" data-category="Языки программирования">Языки программирования</span>
+    <h1>Event loop в JavaScript простыми словами: как работает асинхронность</h1>
+    <div class="post-meta">19 августа 2026 · 8 мин чтения</div>
+
+    <p>JavaScript однопоточный — в любой момент времени выполняется только одна строка кода. И при этом он спокойно тянет сетевые запросы, таймеры и обработку кликов, не блокируя страницу. Кажется, что это противоречие, но разгадка не в магии, а в конкретном механизме — event loop. Разберёмся, как он устроен, из каких частей состоит и почему порядок выполнения асинхронного кода иногда удивляет даже опытных разработчиков.</p>
+
+    <h2>Call stack: почему JavaScript может делать только одно дело за раз</h2>
+    <p>У движка JavaScript есть call stack — стек вызовов функций. Когда вызывается функция, она кладётся на стек; когда функция возвращает значение, она снимается со стека. Пока стек не пуст, движок занят выполнением текущей цепочки вызовов и не может начать ничего нового. Именно это имеют в виду, когда говорят «JavaScript однопоточный»: есть один стек и один поток, который его обрабатывает.</p>
+    <p>Проблема в том, что многие операции — сетевой запрос, чтение файла, таймер — занимают время, и если бы движок ждал их прямо в стеке, страница бы «замерзала» на секунды. Решение: такие операции не выполняются в самом JavaScript-потоке. Они делегируются окружению — браузеру или Node.js, — а движок в это время свободен и может выполнять другой код.</p>
+
+    <h2>Очередь задач и роль event loop</h2>
+    <p>Когда делегированная операция завершается — таймер истёк, ответ сервера пришёл, — окружение не вклинивается в стек напрямую. Вместо этого callback-функция кладётся в очередь задач (task queue, также называемую macrotask queue). А event loop — это простой в своей идее механизм, который постоянно проверяет одно условие: пуст ли call stack. Как только он пуст, event loop берёт следующую задачу из очереди и кладёт её в стек на выполнение.</p>
+    <p>Отсюда и берётся эффект, который многих удивляет: <code>setTimeout(fn, 0)</code> не выполняется мгновенно. Ноль миллисекунд — это не «прямо сейчас», а «поставь задачу в очередь как можно раньше». Но выполнена она будет только после того, как весь текущий синхронный код отработает и стек освободится, даже если это происходит через доли миллисекунды.</p>
+
+    <h2>Микрозадачи: почему промисы обгоняют таймеры</h2>
+    <p>Помимо очереди обычных задач, у event loop есть вторая, более приоритетная очередь — очередь микрозадач (microtask queue). Туда попадают колбэки промисов (<code>.then</code>, <code>.catch</code>, <code>.finally</code>), а также вызовы <code>queueMicrotask</code>. Правило простое и важное: после каждой отдельной задачи из основной очереди, прежде чем взять следующую, event loop полностью опустошает очередь микрозадач — включая те, что были добавлены в процессе её выполнения.</p>
+    <p>Это значит, что микрозадачи всегда выполняются раньше, чем следующий таймер или следующее событие, даже если промис разрешился позже, чем сработал таймер с нулевой задержкой. Порядок вывода в классическом примере это хорошо показывает:</p>
+    <pre><code>console.log('1: синхронный код');
+
+setTimeout(() => console.log('2: таймер'), 0);
+
+Promise.resolve().then(() => console.log('3: микрозадача'));
+
+console.log('4: синхронный код');
+
+// Вывод: 1, 4, 3, 2</code></pre>
+    <p>Сначала выполняется весь синхронный код (1 и 4), затем — прежде чем event loop возьмёт из очереди задач таймер — полностью опустошается очередь микрозадач (3), и только после этого выполняется колбэк таймера (2).</p>
+
+    <h2>Что из этого следует на практике</h2>
+    <p>Понимание этого механизма пригождается не как теория для собеседований, а в конкретных ситуациях отладки:</p>
+    <ul>
+      <li><strong>Долгий синхронный код блокирует всё.</strong> Если внутри цикла или тяжёлого вычисления нет ни одной точки, где стек освобождается, ни один таймер, ни один клик, ни один сетевой колбэк не обработается, пока цикл не закончится — интерфейс «зависает».</li>
+      <li><strong>Цепочка промисов может «съесть» весь кадр раньше, чем ожидается.</strong> Если один <code>.then</code> порождает следующий, а тот — ещё один, они все выполнятся до того, как браузер успеет перерисовать кадр или обработать таймер, потому что очередь микрозадач опустошается целиком.</li>
+      <li><strong>Порядок логов — не баг, а следствие приоритета очередей.</strong> Если в консоли асинхронный код выводится «не в том порядке», в котором написан, почти всегда дело в том, что часть колбэков — микрозадачи, а часть — обычные задачи.</li>
+      <li><strong>async/await — это синтаксический сахар поверх той же модели.</strong> Каждый <code>await</code> фактически ставит продолжение функции в очередь микрозадач, поэтому код после <code>await</code> всегда выполняется асинхронно, даже если промис уже был разрешён к этому моменту.</li>
+    </ul>
+
+    <blockquote>Event loop не ускоряет JavaScript и не делает его многопоточным — он просто определяет порядок, в котором единственный поток берётся за уже готовые задачи, пока сам ничем не занят.</blockquote>
+
+    <h2>Итог</h2>
+    <p>Асинхронность в JavaScript держится на трёх частях: call stack выполняет код по одному вызову за раз, окружение берёт на себя долгие операции и возвращает результат через очереди, а event loop решает, что и когда забрать из этих очередей — сначала полностью опустошая микрозадачи, и только потом переходя к следующей обычной задаче. Как только эта картинка есть в голове, поведение асинхронного кода перестаёт быть набором заученных правил и превращается в предсказуемую механику, которую легко объяснить самому себе при отладке.</p>
+
+    <div class="related-posts" id="related-posts"></div>
+
+    <a class="back-link" href="/">← Все статьи</a>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="/about.html">О проекте</a>
+    <a href="/privacy.html">Политика конфиденциальности</a>
+    <a href="https://t.me/kodblog_dev" target="_blank" rel="noopener">Telegram</a>
+  </div>
+</footer>
+
+<div class="love-note">Я люблю Алину Цой (Билялову)</div>
+
+</body>
+</html>

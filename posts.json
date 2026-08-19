@@ -1,5 +1,15 @@
 [
   {
+    "slug": "event-loop-v-javascript-prostymi-slovami",
+    "title": "Event loop в JavaScript простыми словами: как работает асинхронность",
+    "excerpt": "Разбираемся, как устроены call stack, очередь задач и очередь микрозадач в JavaScript, почему setTimeout(fn, 0) не выполняется мгновенно и что случится раньше — промис или таймер.",
+    "date": "2026-08-19",
+    "readTime": "8 мин",
+    "category": "Языки программирования",
+    "ogTitle": "Event loop в JavaScript простыми словами",
+    "ogDescription": "Почему setTimeout(fn, 0) не выполняется мгновенно и что случится раньше — промис или таймер."
+  },
+  {
     "slug": "pre-commit-huki-avtomatizaciya-proverok-koda",
     "title": "Pre-commit хуки: как ловить проблемы в коде до коммита, а не после",
     "excerpt": "Разбираемся, как устроены git-хуки и pre-commit framework, какие проверки стоит запускать до коммита, а какие лучше оставить для CI, и почему медленные хуки в итоге просто обходят.",
